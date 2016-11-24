@@ -14,9 +14,11 @@ Introducción:
 Mecánica del juego:
 
 - Cada jugador comienza siendo nivel 1. Sin armas ni armadura.
-- Cada unidad del tablero efectuará sus acciones a lo largo de su turno.
+- Cada nivel consiste de una grilla autogenerada. La grilla posee spawn points para unidades y elementos de interaccion, los cuales seran populados una vez que se cargue el nivel.
+- Una vez generado el nivel y populado con items,trampas,monstruos, etc., comienzan a efectuarse los turnos de cada unidad.
+- Cada unidad del tablero efectuará tantas acciones como pueda/quiera, a lo largo de su turno.
 - Un Jugador podrá entonces, durante su turno, moverse e interactuar con los objetos u otras unidades que estén a su alcance en el tablero.
-- Al llegar al Tile que representa el fin del nivel, el jugador continuará con el próximo, en donde podraá seguir encontrando tesoros y equipos que lo harán más y más fuerte.
+- Al llegar al Tile que representa el fin del nivel, el jugador continuará con el próximo, en donde podrá seguir encontrando tesoros y equipos que lo harán más y más fuerte.
 
 Interacción con el tablero:
 
