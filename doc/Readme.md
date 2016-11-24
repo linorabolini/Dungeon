@@ -20,23 +20,4 @@ Mecánica del juego:
 
 Interacción con el tablero:
 
-- Cada forma de interacción requerirá una pizca de habilidad. Para atacar, defenderse, abrir un cofre encantado, activar una palanca y demás, el jugador deberá poner en practica sus reflejos, de la siguiente forma:
-> ```
->
->   ^         -
-> /   \        |  C
->|  |  |       |  R
->|  |  |       |  I
->|  |  |       |  T
->|  |  |       |  I       ------ << ACTION >> ------   Critical hit if action takes place at this point.
->|     |       |  C
->|  |  |       |  A
->|     |       |  L
->|  |  |      -
->=======
->   %
->   %
->   %
->   @
->
-> ```
+- Cada forma de interacción requerirá una pizca de habilidad. Para atacar, defenderse, abrir un cofre encantado, activar una palanca y demás, el jugador deberá poner en practica sus reflejos.
