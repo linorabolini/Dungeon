@@ -10,7 +10,7 @@
 #define __TEST__BoardSuite__
 
 #include "../Suite.h"
-#include <Board.h>
+#include <Board.hpp>
 
 class BoardSuite : public Suite
 {
@@ -18,14 +18,15 @@ public:
     BoardSuite()
     {
         ADD_TEST(BoardSuite::test_of_board_creation);
-        ADD_TEST(BoardSuite::test_vectors);
     }
 
     void test_of_board_creation()
     {
-        Board board;
+        Board* board = new Board(30, 30);
 
-        ASSERT_EQUAL(board.getTiles() == std::nullptr);
+        ASSERT_EQUAL(board->getColumns(), 30);
+        ASSERT_EQUAL(board->getRows(), 30);
+        ASSERT_TRUE(board->getUnits().size() == 0);
 
         ASSERT_TRUE(1 == 1);
         ASSERT_FALSE(1 == 3);

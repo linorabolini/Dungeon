@@ -1,27 +1,45 @@
-#include "screen/GameSCreen.hpp"
+#include <screen/GameScreen.hpp>
 
 GameScreen::GameScreen()
 {
-    this->world_ = new World();
+    board_ = new Board(30, 30);
 }
 
 GameScreen::~GameScreen()
 {
-    delete(this->world_);
+    delete(board_);
 }
 
 void GameScreen::load()
 {
     auto player = new Unit();
-    auto playerSpawnPoint = this.world_->getPlayerSpawnPoint();
-    this->world_->addUnit(player);
-
-    auto enemy = new Unit();
-    auto enemySpawnPoint = this.world_->getPlayerSpawnPoint();
-    this->world_->addUnit(enemy);
+    board_->addUnit(player);
 }
 
 void GameScreen::update()
 {
-    this->world_->update();
+    board_->update();
+}
+
+void GameScreen::unload(){};
+void GameScreen::handleInput(sf::RenderWindow *win_){};
+
+void GameScreen::render(sf::RenderWindow *win_)
+{
+    // sf::CircleShape shape(100.f);
+    // shape.setFillColor(sf::Color::Green);
+
+    while (win_->isOpen())
+    {
+        sf::Event event;
+        while (win_->pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                win_->close();
+        }
+
+        win_->clear();
+        board_->render(win_);
+        win_->display();
+    }
 }

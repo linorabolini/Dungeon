@@ -1,10 +1,11 @@
-#include "Game.hpp"
-#include "screen/MainMenu.hpp"
+#include <Game.hpp>
+#include <screen/MainMenu.hpp>
+#include <screen/GameScreen.hpp>
 
 Game::Game()
 {
-    win_.create(sf::VideoMode(640, 480), "Game");
-    screenManager_.loadScreen(new MainMenu());
+    win_.create(sf::VideoMode(800, 600), "Game");
+    screenManager_.loadScreen(new GameScreen());
 }
 
 void Game::run()

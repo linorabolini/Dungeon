@@ -1,4 +1,4 @@
-#include "ScreenManager.hpp"
+#include <ScreenManager.hpp>
 
 Screen *ScreenManager::loadScreen(Screen *screen)
 {
