@@ -1,24 +1,22 @@
 #include <screen/GameScreen.hpp>
+#include <tinyxml.h>
 
 GameScreen::GameScreen()
 {
-    board_ = new Board(30, 30);
 }
 
 GameScreen::~GameScreen()
 {
-    delete (board_);
 }
 
 void GameScreen::load()
 {
-    auto player = new Unit();
-    board_->addUnit(player);
+    loadBoard();
 }
 
 void GameScreen::update()
 {
-    board_->update();
+    board_.update();
 }
 
 void GameScreen::unload(){};
@@ -36,5 +34,48 @@ void GameScreen::render(sf::RenderWindow *win_)
 {
     // sf::CircleShape shape(100.f);
     // shape.setFillColor(sf::Color::Green);
-    board_->render(win_);
+    board_.render(win_);
 }
+
+void GameScreen::loadBoard()
+{
+    // Load map
+    board_.loadFromFile(Locator::getSystem()->getResPath() + "map/", "map.tmx");
+    board_.generateTilesFromLayer("Board");
+
+    auto playerObject = board_.getObject("Player");
+    auto playerTile = board_.findObjectTileInLayer(playerObject, "Board");
+
+    auto player = new Unit();
+
+    if(!player->texture.loadFromFile(Locator::getSystem()->getResPath() + "spritesheet/dungeon3.png"))
+        std::cout << "error loading player sprite texture" << std::endl;
+    player->sprite.setTexture(player->texture);
+    player->sprite.setTextureRect(sf::IntRect(0, 0, 16, 16));
+
+    board_.addUnit(player, playerTile);
+
+
+
+    // Add player if possible
+    // auto playerSpawnTiles = board_->getObjects(PLAYER_SPAWN_TILE);
+    // if (playerSpawnTiles != NULL)
+    // {
+    //     auto player = new Unit();
+    //     board_->addUnit(player, playerSpawnTiles[0]);
+    // }
+
+    // auto player = new Unit();
+    // board_->addUnit(player, playerSpawnTiles[0]);
+
+
+    // // Add enemies
+    // auto enemySpawnTiles = board_->getObjects(ENEMY_SPAWN_TILE);
+    // for (auto &enemySpawnTile : enemySpawnTiles)
+    // {
+    //     auto enemy = new Unit();
+    //     board_->addUnit(enemy, enemySpawnTile);
+    // }
+    
+}
+

@@ -7,7 +7,7 @@ SRCEXT = cpp
 SOURCES_TEST = $(shell find test -type f -name *.$(SRCEXT))
 SOURCES = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS = -g --std=c++11
+CFLAGS = -g --std=c++11 -DTIXML_USE_STL -DDEBUG
 LIB = -L/Users/linorabolini/Documents/Projects/Cpp/SFML/SFML-2.4.1/lib -lsfml-graphics -lsfml-window -lsfml-system
 INC = -I include -I /Users/linorabolini/Documents/Projects/Cpp/SFML/SFML-2.4.1/include
 

@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "ScreenManager.hpp"
 
+
 class Game
 {
   public:

@@ -2,8 +2,6 @@
 #define GAMESCREEN_HPP
 
 #include "../Screen.hpp"
-#include "../Unit.hpp"
-#include "../Tile.hpp"
 #include "../Board.hpp"
 
 class GameScreen : public Screen
@@ -18,7 +16,9 @@ class GameScreen : public Screen
     virtual void render(sf::RenderWindow *win_);
 
 private:
-    Board* board_;
+    Board board_;
+
+    void loadBoard();
 };
 
 #endif /* GAMESCREEN_HPP */

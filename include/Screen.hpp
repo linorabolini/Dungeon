@@ -2,6 +2,7 @@
 #define SCREEN_HPP
 
 #include <SFML/Graphics.hpp>
+#include "Locator.hpp"
 
 class Screen
 {
