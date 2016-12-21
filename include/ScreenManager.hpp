@@ -2,20 +2,19 @@
 #define SCREENMANAGER_HPP
 
 #include "Screen.hpp"
+#include "GameObject.hpp"
 
-class ScreenManager
+class ScreenManager : public GameObject
 {
   public:
-    ScreenManager() : current_(0){};
-
     Screen *loadScreen(Screen *screen);
     Screen *currentScreen() { return current_; };
     void handleInput(sf::RenderWindow *win_);
-    void update();
-    void render(sf::RenderWindow *win_);
+    virtual void update();
+    virtual void render(sf::RenderWindow *win_);
 
   private:
-    Screen *current_;
+    Screen *current_ = nullptr;
 };
 
 #endif /* SCREENMANAGER_HPP */

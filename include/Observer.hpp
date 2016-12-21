@@ -4,19 +4,20 @@
 #include <functional>
 #include <vector>
 #include <map>
+#include <string>
 
 class Event
 {
   public:
-    Event(int type) : type(type){};
-    int type;
+    Event(std::string type) : type(type){};
+    std::string type;
 };
 
 class Observer
 {
   public:
-    void on(int type, std::function<void(Event)> callback);
-    void off(int type);
+    void on(std::string type, std::function<void(Event)> callback);
+    void off(std::string type);
     void notify(const Event event);
     void trigger(const Event event);
     void observe(Observer *target);
@@ -25,7 +26,7 @@ class Observer
     void removeObserver(Observer *target);
 
   private:
-    std::map<int, std::function<void(Event)>> callbacks_;
+    std::map<std::string, std::function<void(Event)>> callbacks_;
     std::map<Observer *, Observer *> targets_;
 };
 

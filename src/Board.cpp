@@ -1,17 +1,4 @@
 #include <Board.hpp>
-#include <iostream>
-#include <tinyxml.h>
-#include <fstream>
-
-Board::Board()
-{
-    //ctor
-}
-
-Board::~Board()
-{
-    //dtor
-}
 
 bool Board::loadFromFile(std::string dir, std::string filename)
 {
@@ -52,7 +39,7 @@ Layer* Board::getLayer(std::string name)
         if(layers_[i].name == name)
             return &layers_[i];
     }
-    return NULL;
+    return nullptr;
 }
 
 Object* Board::getObject(std::string name)
@@ -62,7 +49,7 @@ Object* Board::getObject(std::string name)
         if(objects_[i].name == name)
             return &objects_[i];
     }
-    return NULL;
+    return nullptr;
 }
 
 Tile* Board::findObjectTileInLayer(Object* object, std::string name)
@@ -72,11 +59,15 @@ Tile* Board::findObjectTileInLayer(Object* object, std::string name)
 
 Tile* Board::findObjectTileInLayer(Object* object, Layer* layer)
 {
+    if(!object){
+        return nullptr;
+    }
     auto rect = object->rect;
     auto x = rect.left / tileWidth_;
     auto y = rect.top / tileHeight_;
 
     auto tileIndex = x + y * cols_;
+    std::cout << "Layer: " + layer->name << "Size: " + std::to_string(layer->tiles.size()) <<  std::endl;
     return &(layer->tiles[tileIndex]);
 }
 
@@ -101,13 +92,11 @@ void Board::render(sf::RenderWindow *win_)
 void Board::addUnit(Unit* unit, Tile* tile)
 {
     units_.push_back(unit);
-    unit->tile = tile;
-    tile->unit = unit;
-    unit->sprite.setPosition(tile->position.x * tileWidth_, tile->position.y * tileHeight_);
+    unit->setTile(tile);
 }
 
 void Board::update()
-{
+{    
 }
 
 bool Board::processTileTypesXML(TiXmlElement* tilesetElement, Tileset* tileset)
@@ -187,23 +176,29 @@ bool Board::processLayerXML(TiXmlElement* map)
         int i = 0;
         for (auto &tileGID : tileIDS)
         {
-            auto tiletype = tileTypes_[tileGID];
-            auto tileset = tiletype.tileset;
-            int subRectToUse = tileGID - tileset->firstTileID; //Work out the subrect ID to 'chop up' the tilesheet image.
             Tile tile; //sprite for the tile
-            tile.tiletype = &tiletype;
-            tile.properties = tiletype.properties;
-            tile.id = subRectToUse;
             tile.position.x = i % cols_;
             tile.position.y = i / cols_;
 
-            if (subRectToUse >= 0)                    //we only need to (and only can) create a sprite/tile if there is one to display
+            if(tileGID > 0)
             {
-                tile.sprite.setTexture(tileset->texture);
-                tile.sprite.setTextureRect(tileset->subRects[subRectToUse]);
-                tile.sprite.setPosition(tile.position.x  * tileWidth_, tile.position.y * tileHeight_);
+                auto tiletype = &tileTypes_[tileGID-1];
+                auto tileset = tiletype->tileset;
+                int subRectToUse = tileGID - tileset->firstTileID; //Work out the subrect ID to 'chop up' the tilesheet image.
+                tile.id = subRectToUse;
+                
+                if (subRectToUse >= 0)                    //we only need to (and only can) create a sprite/tile if there is one to display
+                {
+                    tile.tiletype = tiletype;
+                    tile.properties = tiletype->properties;
+                    tile.sprite.setTexture(tileset->texture);
+                    tile.sprite.setTextureRect(tileset->subRects[subRectToUse]);
+                    tile.sprite.setPosition(tile.position.x  * tileWidth_, tile.position.y * tileHeight_);
 
-                tile.sprite.setColor(sf::Color(255, 255, 255, layer.opacity)); //Set opacity of the tile.
+                    tile.sprite.setColor(sf::Color(255, 255, 255, layer.opacity)); //Set opacity of the tile.
+                }
+            } else { // tiletype does not exist
+                tile.id = -1;
             }
 
             //add tile to layer
@@ -344,6 +339,7 @@ bool Board::processObjectgroupXML(TiXmlElement* map)
     return true;
 }
 
+using namespace std;
 void Board::generateTilesFromLayer(std::string name)
 {
     auto layer = getLayer(name);
@@ -353,69 +349,43 @@ void Board::generateTilesFromLayer(std::string name)
         return;
     }
 
-    auto tiles = layer->tiles;
-    for (int i = 0; i < tiles.size(); i++)
+    for (int i = 0; i < layer->tiles.size(); i++)
     {
-        auto tile = tiles[i];
+
+        auto tile = &layer->tiles[i];
         int col = (i % cols_);
         int row = (i / cols_);
 
+        if(col == 0)
+        {
+            cout << endl;
+        }
 
-        int id = tile.id;
-        std::cout << i << " " << id << std::endl;
+        auto isSolid = layer->tiles[i].GetPropertyString("solid") == "true" ? 1 : 0;
+        cout << isSolid;
 
         if (col > 0)
         {
-            if(tiles[i - 1].GetPropertyString("solid") == "false")
-                tile.tileLeft = &tiles[i - 1];
+            if(layer->tiles[i - 1].GetPropertyString("solid") != "true")
+                tile->tileLeft = &layer->tiles[i - 1];
         }
         if (col < cols_ - 1)
         {
-            if(tiles[i + 1].GetPropertyString("solid") == "false")
-                tile.tileRight = &tiles[i + 1];
+            if(layer->tiles[i + 1].GetPropertyString("solid") != "true")
+                tile->tileRight = &layer->tiles[i + 1];
         }
         if (row > 0)
         {
-            if(tiles[i - cols_].GetPropertyString("solid") == "false")
-                tile.tileUp = &tiles[i - cols_];
+            if(layer->tiles[i - cols_].GetPropertyString("solid") != "true")
+                tile->tileUp = &layer->tiles[i - cols_];
         }
         if (row < rows_ - 1)
         {
-            if(tiles[i + cols_].GetPropertyString("solid") == "false")
-                tile.tileDown = &tiles[i + cols_];
+            if(layer->tiles[i + cols_].GetPropertyString("solid") != "true")
+                tile->tileDown = &layer->tiles[i + cols_];
         }
-
-        tiles[i] = tile;
     }
+    cout << endl;
 }
 
-int XMLNode::GetPropertyInt(std::string name)
-{
-    int i;
-    i = atoi(properties[name].c_str());
 
-    return i;
-}
-
-float XMLNode::GetPropertyFloat(std::string name)
-{
-    float f;
-    f = strtod(properties[name].c_str(), NULL);
-
-    return f;
-}
-
-std::string XMLNode::GetPropertyString(std::string name)
-{
-    return properties[name];
-}
-
-void Layer::render(sf::RenderWindow *win_)
-{
-    for(auto &tile : tiles)
-    {
-        win_->draw(tile.sprite);
-        if(tile.unit)
-            win_->draw(tile.unit->sprite);
-    }
-}

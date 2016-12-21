@@ -2,87 +2,31 @@
 #define BOARD_HPP
 
 #include "tinyxml.h"
-#include <vector>
+#include <iostream>
+#include <tinyxml.h>
+#include <fstream>
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include "GameObject.hpp"
+#include "GameMacros.hpp"
+#include <thread>
+#include "Unit.hpp"
+#include "Tile.hpp"
+#include "Object.hpp"
+#include "Layer.hpp"
+#include "Tileset.hpp"
+#include "Tiletype.hpp"
 
 class Unit;
+class Layer;
+class Tile;
 
-class XMLNode {
-  public:
-    int id;
-    virtual int GetPropertyInt(std::string name);
-    virtual float GetPropertyFloat(std::string name);
-    virtual std::string GetPropertyString(std::string name);
-    std::map<std::string, std::string> properties; //All properties of the object. Values are stored as strings and mapped by strings(names provided in editor).
-};
-
-class Object : public XMLNode
-{
-  public:
-    std::string name;
-    std::string type;
-    sf::Rect<int> rect;
-    std::map<std::string, std::string> properties; //All properties of the object. Values are stored as strings and mapped by strings(names provided in editor).
-};
-
-class Tileset : public XMLNode
-{
-  public:
-    std::string name;
-    sf::Texture texture;
-    int firstTileID;
-    std::vector<sf::Rect<int>> subRects;
-};
-
-class Tiletype : public XMLNode
-{
-  public:
-    Tileset* tileset;
-};
-
-class Tile : public XMLNode
-{
-  public:
-    sf::Vector2f position;
-    Tiletype* tiletype;
-    Tile *tileUp = nullptr;
-    Tile *tileDown = nullptr;
-    Tile *tileLeft = nullptr;
-    Tile *tileRight = nullptr;
-    Unit* unit = nullptr;
-    sf::Sprite sprite;
-};
-
-class Unit
+class Board : public GameObject
 {
 public:
-    sf::Vector2f position;
-    Tile *tile = nullptr;
-    sf::Color color;
-    sf::Sprite sprite;
-    sf::Texture texture;
-    char *name;
-private:
-};
+    virtual void update();
+    virtual void render(sf::RenderWindow *win_);
 
-class Layer
-{
-  public:
-    int id;
-    int opacity;
-    std::vector<Tile> tiles;
-    void render(sf::RenderWindow* win_);
-    std::string name;
-};
-
-class Board
-{
-public:
-    Board();
-    ~Board();
-
-    void update();
-    void render(sf::RenderWindow* win_);
     void addUnit(Unit* unit, Tile* tiles);
     void setDrawingBounds(sf::Rect<float> bounds);
 

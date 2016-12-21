@@ -1,10 +1,10 @@
 #include <Observer.hpp>
 
-void Observer::on(int type, std::function<void(Event)> callback)
+void Observer::on(std::string type, std::function<void(Event)> callback)
 {
     callbacks_[type] = callback;
 }
-void Observer::off(int type)
+void Observer::off(std::string type)
 {
     callbacks_.erase(type);
 }

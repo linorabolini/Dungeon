@@ -5,12 +5,8 @@
 Game::Game()
 {
     int w = 1600;
-    int h = 1280;
+    int h = 1600;
     win_.create(sf::VideoMode(w, h), "Game");
-    sf::View gameView = win_.getDefaultView();
-    gameView.zoom(0.2f);
-    gameView.move(-w / 2 + 5 * 16, -h / 2 + 10 * 16);
-    win_.setView(gameView);
     screenManager_.loadScreen(new GameScreen());
 }
 

@@ -2,6 +2,7 @@
 #define LOCATOR_HPP
 
 #include <string>
+#include "camera.hpp"
 
 class System
 {
@@ -17,7 +18,6 @@ class Locator
 {
   public:
     static System *getSystem() { return system_; }
-
     static void provide(System* value)
     {
         system_ = value;
