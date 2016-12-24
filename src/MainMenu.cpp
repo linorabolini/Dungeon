@@ -1,4 +1,4 @@
-#include <screen/MainMenu.hpp>
+#include <MainMenu.hpp>
 
 void MainMenu::render(sf::RenderWindow *win_)
 {

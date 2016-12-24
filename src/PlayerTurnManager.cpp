@@ -2,56 +2,85 @@
 
 void PlayerTurnManager::doTurn(Unit *unit)
 {
+    // player can only do actions over the surrounding tiles.
     auto tile = unit->tile;
-    auto suroundingTiles = tile->getSurroundingTiles();
+    auto surroundingTiles = tile->surroundingTiles;
 
-    for (auto &tile : suroundingTiles)
+    auto possibleActions = getUnitPossibleActions(unit, surroundingTiles);
+
+    highlightTiles(surroundingTiles);
+    auto actionToDo = waitForPlayerAction(possibleActions);
+    highlightTiles(surroundingTiles, false);
+
+    actionToDo(unit);
+}
+
+UnitAction
+PlayerTurnManager::waitForPlayerAction(std::map<Direction, UnitAction> possibleActions)
+{
+    LOG_AND_WAIT("SELECTING AN ACTION");
+    while (true)
     {
-        highlightTile(tile);
-    }
-
-    Tile* target_tile = nullptr;
-    LOG_AND_WAIT("SELECTING A TILE");
-    while(!target_tile)
-    {
-        if (tile->tileLeft && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        if (possibleActions.count(Direction::LEFT) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            target_tile = tile->tileLeft;
-            LOG_AND_WAIT("SELECTING TILE LEFT");
+            return possibleActions[Direction::LEFT];
         }
-        if (tile->tileRight && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        if (possibleActions.count(Direction::RIGHT) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
-            target_tile = tile->tileRight;
-            LOG_AND_WAIT("SELECTING TILE RIGHT");
+            return possibleActions[Direction::RIGHT];
         }
-        if (tile->tileUp && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        if (possibleActions.count(Direction::UP) && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         {
-            target_tile = tile->tileUp;
-            LOG_AND_WAIT("SELECTING TILE UP");
+            return possibleActions[Direction::UP];
         }
-        if (tile->tileDown && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        if (possibleActions.count(Direction::DOWN) && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
-            target_tile = tile->tileDown;
-            LOG_AND_WAIT("SELECTING TILE DOWN");
+            return possibleActions[Direction::DOWN];
         }
-    }
-
-    LOG_AND_WAIT("DO ACTION FOR SELECTED TILE");
-    unit->setTile(target_tile);
-
-    for (auto &tile : suroundingTiles)
-    {
-        highlightTile(tile, false);
     }
 }
 
-void PlayerTurnManager::highlightTile(Tile *tile, bool value)
+std::map<Direction, UnitAction>
+PlayerTurnManager::getUnitPossibleActions(Unit *unit, std::map<Direction, Tile *> surroundingTiles)
 {
-    LOG_AND_WAIT("HIGHLIGHT TILE");
+    std::map<Direction, UnitAction> actions;
+    for (auto &reg : surroundingTiles)
+    {
+        auto dir = reg.first;
+        auto targetTile = reg.second;
 
-    if(value){
-        tile->sprite.setColor(sf::Color(0, 255, 0));
-    } else {
-        tile->sprite.setColor(sf::Color::White);
+        if (targetTile->unit)
+        {
+            actions[dir] = [targetTile](Unit *unit) {
+                LOG_AND_WAIT("ATTACK !");
+            };
+        }
+        else if (targetTile->GetPropertyString("solid") != "true")
+        {
+            actions[dir] = [targetTile](Unit *unit) {
+                LOG_AND_WAIT("DUMMY ACTION");
+                unit->setTile(targetTile);
+            };
+        }
+    }
+
+    return actions;
+}
+
+void PlayerTurnManager::highlightTiles(std::map<Direction, Tile *> tiles, bool value)
+{
+    for (auto &reg : tiles)
+    {
+        if (reg.second)
+        {
+            if (value)
+            {
+                reg.second->sprite.setColor(sf::Color(0, 255, 0));
+            }
+            else
+            {
+                reg.second->sprite.setColor(sf::Color::White);
+            }
+        }
     }
 }

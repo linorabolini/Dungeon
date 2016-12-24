@@ -2,7 +2,7 @@
 #define PLAYERTURNMANAGER_HPP
 
 #include "Board.hpp"
-#include "screen/GameScreen.hpp"
+#include "GameScreen.hpp"
 #include "GameMacros.hpp"
 #include "TurnManager.hpp"
 
@@ -10,17 +10,17 @@ class GameScreen;
 class Unit;
 class Tile;
 
+typedef std::function<void(Unit *unit)> UnitAction;
 
 class PlayerTurnManager : public TurnManager
 {
-public:
-    PlayerTurnManager(GameScreen* gamescreen):
-        gamescreen_(gamescreen) {};
+  public:
+    virtual void doTurn(Unit *unit);
 
-    virtual void doTurn(Unit* unit);
-    void highlightTile(Tile* tile, bool value=true);
-private:
-    GameScreen* gamescreen_ = nullptr;
+  private:
+    void highlightTiles(std::map<Direction, Tile *>, bool value = true);
+    UnitAction waitForPlayerAction(std::map<Direction, UnitAction>);
+    std::map<Direction, UnitAction> getUnitPossibleActions(Unit *, std::map<Direction, Tile *>);
 };
 
 #endif /* PLAYERTURNMANAGER_HPP */

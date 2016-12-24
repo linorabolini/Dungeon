@@ -3,13 +3,16 @@
 
 
 #include <GameMacros.hpp>
-#include "../Screen.hpp"
-#include "../PlayerTurnManager.hpp"
-#include "../Board.hpp"
+#include "TurnManager.hpp"
+#include "PlayerTurnManager.hpp"
+#include "Screen.hpp"
+#include "Camera.hpp"
+#include "Board.hpp"
 #include <thread>
 #include <tinyxml.h>
 
 class Unit;
+class TurnManager;
 class PlayerTurnManager;
 class Board;
 
@@ -19,7 +22,7 @@ class GameScreen : public Screen
     virtual void load();
     virtual void unload();
     virtual void handleInput(sf::RenderWindow *window);
-    virtual void update();
+    virtual void updateCurrent();
     virtual void render(sf::RenderWindow *window);
 
     void gameLoop();

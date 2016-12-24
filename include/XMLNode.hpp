@@ -12,7 +12,7 @@ class XMLNode {
     virtual int GetPropertyInt(std::string name);
     virtual float GetPropertyFloat(std::string name);
     virtual std::string GetPropertyString(std::string name);
-    std::map<std::string, std::string> properties; //All properties of the object. Values are stored as strings and mapped by strings(names provided in editor).
+    std::map<std::string, std::string> properties; //All properties of the TileObject. Values are stored as strings and mapped by strings(names provided in editor).
 };
 
 #endif /* XMLNODE_HPP */

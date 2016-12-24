@@ -1,10 +1,11 @@
 #include <Camera.hpp>
 
-void Camera::update()
+void Camera::updateCurrent()
 {
     if(target_)
     {
-        view_.setCenter(target_->getPosition());
+        auto diff = target_->getPosition() - view_.getCenter();
+        view_.move(diff * 0.01f);
     }
 }
 

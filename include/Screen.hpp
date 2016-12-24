@@ -3,9 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 #include "Locator.hpp"
-#include "GameObject.hpp"
+#include "SceneNode.hpp"
 
-class Screen : public GameObject
+class Screen : public SceneNode
 {
   public:
     virtual void load(){};

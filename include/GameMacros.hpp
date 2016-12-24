@@ -3,7 +3,7 @@
 
 #define LOG_AND_WAIT(msg) \
     std::cout << msg << std::endl; \
-    sf::sleep(sf::milliseconds(10));
+    sf::sleep(sf::milliseconds(100));
 
 
 #endif /* GAMEMACROS_HPP */

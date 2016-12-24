@@ -2,7 +2,6 @@
 
 void Unit::doTurn()
 {
-    std::cout << "UNIT DO TURN" << std::endl;
     turnManager_->doTurn(this);
 }
 
@@ -19,10 +18,6 @@ void Unit::setTile(Tile* theTile)
 
     tile = theTile;
     tile->unit = this;
+    tile->addChild(this);
     sprite.setPosition(tile->position.x * 16, tile->position.y * 16);
-}
-
-void Unit::render(sf::RenderWindow* window)
-{
-    window->draw(sprite);
 }

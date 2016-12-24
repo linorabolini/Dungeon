@@ -1,6 +1,6 @@
 #include <Game.hpp>
-#include <screen/MainMenu.hpp>
-#include <screen/GameScreen.hpp>
+#include <MainMenu.hpp>
+#include <GameScreen.hpp>
 
 Game::Game()
 {

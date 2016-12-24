@@ -7,6 +7,8 @@ int main(int argc, char *argv[])
 {
     auto sys = new System();
     sys->setResPath("/Users/linorabolini/Documents/Projects/Cpp/SFML/Test/res/");
+    sys->setMapPath(sys->getResPath() + "map/");
+    sys->setSpriteSheetPath(sys->getResPath() + "spritesheet/");
 
     Locator::provide(sys);
 

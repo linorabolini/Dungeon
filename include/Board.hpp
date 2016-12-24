@@ -7,38 +7,35 @@
 #include <fstream>
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "GameObject.hpp"
+#include "SceneNode.hpp"
 #include "GameMacros.hpp"
 #include <thread>
 #include "Unit.hpp"
 #include "Tile.hpp"
-#include "Object.hpp"
-#include "Layer.hpp"
+#include "TileObject.hpp"
+#include "TileLayer.hpp"
 #include "Tileset.hpp"
 #include "Tiletype.hpp"
+#include <Locator.hpp>
 
 class Unit;
-class Layer;
+class TileLayer;
 class Tile;
 
-class Board : public GameObject
+class Board : public SceneNode
 {
 public:
-    virtual void update();
-    virtual void render(sf::RenderWindow *win_);
-
-    void addUnit(Unit* unit, Tile* tiles);
-    void setDrawingBounds(sf::Rect<float> bounds);
+    void addUnit(Unit* unit);
 
     bool loadFromFile(std::string filename, std::string dir);
-    void generateTilesFromLayer(std::string name);
+    void connectTilesFromTileLayer(std::string name);
 
     int getRows() { return rows_; };
     int getColumns() { return cols_; };
-    Layer* getLayer(std::string name);
-    Object* getObject(std::string name);
-    Tile* findObjectTileInLayer(Object* object, std::string name);
-    Tile* findObjectTileInLayer(Object* object, Layer* layer);
+    TileLayer* getTileLayer(std::string name);
+    TileObject* getTileObject(std::string name);
+    Tile* findObjectTileInTileLayer(TileObject* TileObject, std::string name);
+    Tile* findObjectTileInTileLayer(TileObject* TileObject, TileLayer* layer);
     std::vector<Unit*> getUnits() { return units_; };
     std::vector<Tile>* getTiles() { return &tiless_; };
 
@@ -49,19 +46,16 @@ private:
     int tileHeight_;
     std::vector<Unit*> units_;
     std::vector<Tile> tiless_;
-    sf::Rect<float> drawingBounds_;
 
     bool processTilesetXML(TiXmlElement* map);
     bool processTileTypesXML(TiXmlElement* tilesetElement, Tileset* tileset);
-    bool processLayerXML(TiXmlElement* map);
+    bool processTileLayerXML(TiXmlElement* map);
     bool processObjectgroupXML(TiXmlElement* map);
 
     std::map<std::string, Tileset> tilesets_;
     std::map<int, Tiletype> tileTypes_;
-    std::vector<Layer> layers_;
-    std::vector<Object> objects_;
-
-    std::string mapDir_;
+    std::vector<TileLayer> tileLayers_;
+    std::vector<TileObject> tileObjects_;
 };
 
 #endif /* BOARD_HPP */

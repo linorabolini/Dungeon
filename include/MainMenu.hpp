@@ -1,7 +1,7 @@
 #ifndef MAINMENU_HPP
 #define MAINMENU_HPP
 
-#include "../Screen.hpp"
+#include "Screen.hpp"
 
 class MainMenu : public Screen
 {

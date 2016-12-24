@@ -6,10 +6,8 @@
 #include <map>
 #include <string>
 
-class Event
+struct Event
 {
-  public:
-    Event(std::string type) : type(type){};
     std::string type;
 };
 

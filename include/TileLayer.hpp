@@ -3,15 +3,15 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "SceneNode.hpp"
 #include "Tile.hpp"
 
-class Layer
+class TileLayer : public SceneNode
 {
   public:
     int id;
     int opacity;
-    std::vector<Tile> tiles;
-    void render(sf::RenderWindow* win_);
+    std::vector<Tile*> tiles;
     std::string name;
 };
 

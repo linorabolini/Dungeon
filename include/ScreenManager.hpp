@@ -2,9 +2,9 @@
 #define SCREENMANAGER_HPP
 
 #include "Screen.hpp"
-#include "GameObject.hpp"
+#include "SceneNode.hpp"
 
-class ScreenManager : public GameObject
+class ScreenManager : public SceneNode
 {
   public:
     Screen *loadScreen(Screen *screen);
