@@ -69,11 +69,6 @@ Tile* Board::findObjectTileInTileLayer(TileObject* tileObject, TileLayer* layer)
     return layer->tiles[tileIndex];
 }
 
-void Board::addUnit(Unit* unit)
-{
-    units_.push_back(unit);
-}
-
 bool Board::processTileTypesXML(TiXmlElement* tilesetElement, Tileset* tileset)
 {
     auto tileElement = tilesetElement->FirstChildElement("tile");
@@ -205,7 +200,7 @@ bool Board::processTilesetXML(TiXmlElement* map)
         auto image = tilesetElement->FirstChildElement("image");
         std::string imagepath = image->Attribute("source");
 
-        tileset.texture.loadFromFile(Locator::getSystem()->getMapPath() + imagepath);
+        tileset.texture.loadFromFile(Locator::getDirHelper()->getMapPath() + imagepath);
         tileset.texture.setSmooth(false);
 
         // Clip Rects 

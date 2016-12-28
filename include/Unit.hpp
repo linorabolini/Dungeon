@@ -5,6 +5,7 @@
 #include "SpriteNode.hpp"
 #include "Tile.hpp"
 #include "TurnManager.hpp"
+#include "GameManager.hpp"
 
 class Tile;
 class TurnManager;

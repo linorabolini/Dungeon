@@ -2,7 +2,6 @@
 #define SCREEN_HPP
 
 #include <SFML/Graphics.hpp>
-#include "Locator.hpp"
 #include "SceneNode.hpp"
 
 class Screen : public SceneNode

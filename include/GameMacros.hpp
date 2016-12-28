@@ -1,9 +1,10 @@
 #ifndef GAMEMACROS_HPP
 #define GAMEMACROS_HPP
 
-#define LOG_AND_WAIT(msg) \
-    std::cout << msg << std::endl; \
-    sf::sleep(sf::milliseconds(100));
+#define LOG(msg) \
+    std::cout << msg << std::endl;
 
+#define WAIT(time) \
+    sf::sleep(sf::milliseconds(time));
 
 #endif /* GAMEMACROS_HPP */

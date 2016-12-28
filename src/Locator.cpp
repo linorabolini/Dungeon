@@ -1,3 +1,4 @@
 #include <Locator.hpp>
 
-System *Locator::system_;
+DirHelper *Locator::dirHelper_;
+GameManager *Locator::gameManager_;

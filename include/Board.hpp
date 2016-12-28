@@ -25,8 +25,6 @@ class Tile;
 class Board : public SceneNode
 {
 public:
-    void addUnit(Unit* unit);
-
     bool loadFromFile(std::string filename, std::string dir);
     void connectTilesFromTileLayer(std::string name);
 
@@ -36,16 +34,12 @@ public:
     TileObject* getTileObject(std::string name);
     Tile* findObjectTileInTileLayer(TileObject* TileObject, std::string name);
     Tile* findObjectTileInTileLayer(TileObject* TileObject, TileLayer* layer);
-    std::vector<Unit*> getUnits() { return units_; };
-    std::vector<Tile>* getTiles() { return &tiless_; };
 
 private:
     int cols_ = 0;
     int rows_ = 0;
     int tileWidth_;
     int tileHeight_;
-    std::vector<Unit*> units_;
-    std::vector<Tile> tiless_;
 
     bool processTilesetXML(TiXmlElement* map);
     bool processTileTypesXML(TiXmlElement* tilesetElement, Tileset* tileset);

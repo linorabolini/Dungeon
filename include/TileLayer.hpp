@@ -2,9 +2,11 @@
 #define LAYER_HPP
 
 #include <SFML/Graphics.hpp>
-#include <vector>
-#include "SceneNode.hpp"
 #include "Tile.hpp"
+#include "SceneNode.hpp"
+#include <vector>
+
+class Tile;
 
 class TileLayer : public SceneNode
 {

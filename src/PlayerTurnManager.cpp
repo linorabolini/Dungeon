@@ -9,16 +9,18 @@ void PlayerTurnManager::doTurn(Unit *unit)
     auto possibleActions = getUnitPossibleActions(unit, surroundingTiles);
 
     highlightTiles(surroundingTiles);
+
     auto actionToDo = waitForPlayerAction(possibleActions);
+
     highlightTiles(surroundingTiles, false);
 
-    actionToDo(unit);
+    actionToDo();
 }
 
 UnitAction
 PlayerTurnManager::waitForPlayerAction(std::map<Direction, UnitAction> possibleActions)
 {
-    LOG_AND_WAIT("SELECTING AN ACTION");
+    LOG("SELECTING AN ACTION");
     while (true)
     {
         if (possibleActions.count(Direction::LEFT) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -49,16 +51,23 @@ PlayerTurnManager::getUnitPossibleActions(Unit *unit, std::map<Direction, Tile *
         auto dir = reg.first;
         auto targetTile = reg.second;
 
+        // COMMAND PATTERN 
         if (targetTile->unit)
         {
-            actions[dir] = [targetTile](Unit *unit) {
-                LOG_AND_WAIT("ATTACK !");
+            actions[dir] = [=]() {
+                Locator::getGameManager()->getCamera()->setZoom(0.05f);
+                LOG("ATTACK !");
+                LOG("PIM !");
+                LOG("PAM !");
+                LOG("PUM !");
+                WAIT(1000);
+                Locator::getGameManager()->getCamera()->setZoom(0.2f);
             };
         }
         else if (targetTile->GetPropertyString("solid") != "true")
         {
-            actions[dir] = [targetTile](Unit *unit) {
-                LOG_AND_WAIT("DUMMY ACTION");
+            actions[dir] = [=]() {
+                LOG("DUMMY ACTION");
                 unit->setTile(targetTile);
             };
         }

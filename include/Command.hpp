@@ -3,8 +3,7 @@
 
 struct Command
 {
-    unsigned int system;
-    unsigned int type;
+    virtual void execute(){};
 };
 
 #endif /* COMMAND_HPP */

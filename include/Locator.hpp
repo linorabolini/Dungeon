@@ -3,9 +3,11 @@
 
 #include <string>
 #include <queue>
-#include "CommandQueue.hpp"
+#include "GameManager.hpp"
 
-class System
+class GameManager;
+
+class DirHelper
 {
   public:
     void setResPath(std::string value) { resPath_ = value; }
@@ -26,14 +28,14 @@ class System
 class Locator
 {
   public:
-    static System *getSystem() { return system_; }
-    static void provide(System* value) { system_ = value; }
+    static DirHelper *getDirHelper() { return dirHelper_; }
+    static void provide(DirHelper* value) { dirHelper_ = value; }
 
-    static CommandQueue *getCommandQueue() { return commandQueue_; }
-    static void provide(CommandQueue* value) { commandQueue_ = value; }
+    static GameManager *getGameManager() { return gameManager_; }
+    static void provide(GameManager* value) { gameManager_ = value; }
 
   private:
-    static System *system_;
-    static CommandQueue *commandQueue_;
+    static DirHelper *dirHelper_;
+    static GameManager *gameManager_;
 };
 #endif /* LOCATOR_HPP */

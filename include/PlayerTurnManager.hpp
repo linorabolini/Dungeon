@@ -1,6 +1,8 @@
 #ifndef PLAYERTURNMANAGER_HPP
 #define PLAYERTURNMANAGER_HPP
 
+#include "Directions.hpp"
+#include "Tile.hpp"
 #include "Board.hpp"
 #include "GameScreen.hpp"
 #include "GameMacros.hpp"
@@ -10,7 +12,7 @@ class GameScreen;
 class Unit;
 class Tile;
 
-typedef std::function<void(Unit *unit)> UnitAction;
+typedef std::function<void()> UnitAction;
 
 class PlayerTurnManager : public TurnManager
 {
