@@ -15,7 +15,6 @@ public:
     sf::Vector2f position;
     Tile *tile = nullptr;
     sf::Texture texture;
-    char *name;
 
     void setTile(Tile* theTile);
 

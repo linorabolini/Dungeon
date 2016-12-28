@@ -65,7 +65,7 @@ Tile* Board::findObjectTileInTileLayer(TileObject* tileObject, TileLayer* layer)
     auto x = rect.left / tileWidth_;
     auto y = rect.top / tileHeight_;
 
-    auto tileIndex = x + y * cols_;
+    auto tileIndex = x + (y-1) * cols_;
     return layer->tiles[tileIndex];
 }
 
@@ -149,6 +149,7 @@ bool Board::processTileLayerXML(TiXmlElement* map)
             auto tile = new Tile(); //sprite for the tile
             tile->position.x = i % cols_;
             tile->position.y = i / cols_;
+            tile->setPosition(tile->position.x  * tileWidth_, tile->position.y * tileHeight_);
 
             if(tileGID > 0)
             {
@@ -163,8 +164,6 @@ bool Board::processTileLayerXML(TiXmlElement* map)
                     tile->properties = tiletype->properties;
                     tile->sprite.setTexture(tileset->texture);
                     tile->sprite.setTextureRect(tileset->subRects[subRectToUse]);
-                    tile->sprite.setPosition(tile->position.x  * tileWidth_, tile->position.y * tileHeight_);
-
                     tile->sprite.setColor(sf::Color(255, 255, 255, layer->opacity)); //Set opacity of the tile
                 }
             } else { // tiletype does not exist

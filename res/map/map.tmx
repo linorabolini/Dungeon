@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="20" tilewidth="16" tileheight="16" nextobjectid="95">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="20" tilewidth="16" tileheight="16" nextobjectid="97">
  <tileset firstgid="1" name="dungeon3" tilewidth="16" tileheight="16" tilecount="240" columns="24">
   <image source="../spritesheet/dungeon3.png" width="384" height="160"/>
   <terraintypes>
@@ -1304,8 +1304,8 @@
  </layer>
  <objectgroup name="Objects">
   <object id="6" gid="183" x="395" y="436" width="16" height="16"/>
-  <object id="10" name="Player" gid="165" x="80" y="256" width="16" height="16"/>
   <object id="85" name="Exit" gid="173" x="128" y="32" width="16" height="16"/>
   <object id="89" name="Enemy" gid="188" x="32" y="192" width="16" height="16"/>
+  <object id="95" name="Player" gid="189" x="96" y="208" width="16" height="16"/>
  </objectgroup>
 </map>

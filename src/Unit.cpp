@@ -13,11 +13,11 @@ void Unit::setTile(Tile* theTile)
     }
     if(tile) 
     {
+        tile->removeChild(this);
         tile->unit = nullptr;
     }
 
     tile = theTile;
     tile->unit = this;
     tile->addChild(this);
-    sprite.setPosition(tile->position.x * 16, tile->position.y * 16);
 }

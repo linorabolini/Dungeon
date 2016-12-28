@@ -25,5 +25,5 @@ void ScreenManager::update()
 
 void ScreenManager::render(sf::RenderWindow *win_)
 {
-    current_->render(win_);
+    current_->render(win_, sf::Transform::Identity);
 }

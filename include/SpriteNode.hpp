@@ -7,8 +7,8 @@ class SpriteNode : public SceneNode
 {
 public:
     sf::Sprite sprite;
-    virtual void renderCurrent(sf::RenderWindow* window) {
-        window->draw(sprite);
+    virtual void renderCurrent(sf::RenderWindow *window, const sf::Transform& parentTransform) const {
+        window->draw(sprite, parentTransform);
     }
 };
 

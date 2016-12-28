@@ -39,6 +39,7 @@ PlayerTurnManager::waitForPlayerAction(std::map<Direction, UnitAction> possibleA
         {
             return possibleActions[Direction::DOWN];
         }
+        std::this_thread::yield();
     }
 }
 
@@ -60,6 +61,15 @@ PlayerTurnManager::getUnitPossibleActions(Unit *unit, std::map<Direction, Tile *
                 LOG("PIM !");
                 LOG("PAM !");
                 LOG("PUM !");
+
+                auto txt = new sf::Texture();
+                txt->loadFromFile(Locator::getDirHelper()->getSpriteSheetPath() + "weapon.png");
+
+                auto weapon = new SpriteNode();
+                weapon->sprite.setTexture(*txt);
+
+                unit->addChild(weapon);
+
                 WAIT(1000);
                 Locator::getGameManager()->getCamera()->setZoom(0.2f);
             };

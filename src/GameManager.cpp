@@ -47,15 +47,15 @@ void GameManager::updateCurrent()
     }
 }
 
-void GameManager::render(sf::RenderWindow *window)
+void GameManager::render(sf::RenderWindow *window, const sf::Transform parentTransform) const
 {
     // render Game Elements using Camera
     window->setView(camera_->getView());
-    gameLayer_->render(window);
+    gameLayer_->render(window, parentTransform);
     window->setView(window->getDefaultView());
 
     // render UI elements
-    uiLayer_->render(window);
+    uiLayer_->render(window, parentTransform);
 }
 
 void GameManager::turnLoop()
@@ -119,14 +119,13 @@ void GameManager::addPlayer()
     player->setTurnManager(playerTurnManager);
     player->setTile(playerTile);
 
-    if (!player->texture.loadFromFile(Locator::getDirHelper()->getSpriteSheetPath() + "dungeon3.png"))
-        std::cout << "error loading player sprite texture" << std::endl;
+    player->texture.loadFromFile(Locator::getDirHelper()->getSpriteSheetPath() + "dungeon3.png");
     player->sprite.setTexture(player->texture);
     player->sprite.setTextureRect(sf::IntRect(320, 7 * 16, 16, 16));
 
     addUnit(player);
 
-    camera_->setTarget(&player->sprite);
+    camera_->setTarget(player);
 
     playerObject = board_->getTileObject("Enemy");
     playerTile = board_->findObjectTileInTileLayer(playerObject, "Board");
@@ -136,8 +135,7 @@ void GameManager::addPlayer()
     player->setTurnManager(turnManager);
     player->setTile(playerTile);
 
-    if (!player->texture.loadFromFile(Locator::getDirHelper()->getSpriteSheetPath() + "dungeon3.png"))
-        std::cout << "error loading player sprite texture" << std::endl;
+    player->texture.loadFromFile(Locator::getDirHelper()->getSpriteSheetPath() + "dungeon3.png");
     player->sprite.setTexture(player->texture);
     player->sprite.setTextureRect(sf::IntRect(320 + 16, 7 * 16, 16, 16));
 

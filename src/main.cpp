@@ -1,6 +1,4 @@
 #include <Game.hpp>
-#include <iostream>
-#include <unistd.h>
 #include <Locator.hpp>
 
 int main(int argc, char *argv[])
@@ -19,6 +17,7 @@ int main(int argc, char *argv[])
     game.run();
 
     delete sys;
+    delete gm;
 
     return 0;
 }

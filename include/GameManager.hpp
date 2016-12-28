@@ -16,7 +16,8 @@ class GameManager : public SceneNode
 {
   public:
     virtual void updateCurrent();
-    virtual void render(sf::RenderWindow *window);
+    virtual void render(sf::RenderWindow *window, const sf::Transform parentTransform) const;
+    
 
     void load();
     void unload();
