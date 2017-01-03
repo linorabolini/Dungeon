@@ -7,6 +7,8 @@
 #include "TurnManager.hpp"
 #include "GameManager.hpp"
 
+using namespace std;
+
 class Tile;
 class TurnManager;
 class Unit : public SpriteNode
@@ -14,7 +16,6 @@ class Unit : public SpriteNode
 public:
     sf::Vector2f position;
     Tile *tile = nullptr;
-    sf::Texture texture;
 
     void setTile(Tile* theTile);
 
@@ -22,6 +23,22 @@ public:
     void setTurnManager(TurnManager* turnManager) { turnManager_ = turnManager; }
 private:
     TurnManager* turnManager_;
+
+
+// move it to a component ?
+public:
+    
+    void receiveDamage(int damage) {
+        hp_ = max(0, hp_ - damage);
+    }
+    int getHP() {
+        return hp_;
+    }
+    void setHP(int value) {
+        hp_ = value;
+    }
+private:
+    int hp_;
 };
 
 

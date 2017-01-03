@@ -8,7 +8,6 @@ class Tileset : public XMLNode
 {
   public:
     std::string name;
-    sf::Texture texture;
     int firstTileID;
     std::vector<sf::Rect<int>> subRects;
 };

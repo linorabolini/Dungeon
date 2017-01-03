@@ -10,11 +10,11 @@ void GameManager::load()
 
     // create a board
     board_ = new Board();
+    board_->setScale(5, 5);
     gameLayer_->addChild(board_);
 
     // create a camera
     camera_ = new Camera();
-    camera_->setZoom(0.2f);
     addChild(camera_);
 
     // start the turn loop in a parallel thread
@@ -119,9 +119,17 @@ void GameManager::addPlayer()
     player->setTurnManager(playerTurnManager);
     player->setTile(playerTile);
 
-    player->texture.loadFromFile(Locator::getDirHelper()->getSpriteSheetPath() + "dungeon3.png");
-    player->sprite.setTexture(player->texture);
-    player->sprite.setTextureRect(sf::IntRect(320, 7 * 16, 16, 16));
+    // load textures
+    auto rm = Locator::getResourceManager();
+    rm->registerTexture("dungeon3", Locator::getDirHelper()->getSpriteSheetPath() + "dungeon3.png");
+    rm->registerTexture("weapon", Locator::getDirHelper()->getSpriteSheetPath() + "weapon2.png");
+    rm->registerTexture("selectedTileEffect", Locator::getDirHelper()->getSpriteSheetPath() + "selectedTileEffect.png");
+
+
+    rm->registerFont("Boo City", Locator::getDirHelper()->getFontPath() + "Boo City.ttf");
+
+    player->sprite.setTexture(rm->getTexture("dungeon3"));
+    player->sprite.setTextureRect(Utils::getRectForTilemap(20, 7, 16, 16));
 
     addUnit(player);
 
@@ -135,9 +143,8 @@ void GameManager::addPlayer()
     player->setTurnManager(turnManager);
     player->setTile(playerTile);
 
-    player->texture.loadFromFile(Locator::getDirHelper()->getSpriteSheetPath() + "dungeon3.png");
-    player->sprite.setTexture(player->texture);
-    player->sprite.setTextureRect(sf::IntRect(320 + 16, 7 * 16, 16, 16));
+    player->sprite.setTexture(rm->getTexture("dungeon3"));
+    player->sprite.setTextureRect(Utils::getRectForTilemap(21, 7, 16, 16));
 
     addUnit(player);
 }

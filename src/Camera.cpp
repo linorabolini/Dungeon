@@ -4,7 +4,7 @@ void Camera::updateCurrent()
 {
     if(target_)
     {
-        auto diff = target_->getWorldPosition() - view_.getCenter();
+        auto diff = target_->getWorldPosition() - view_.getCenter() + sf::Vector2f(8*4, 0);
         view_.move(diff * 0.01f);
     }
 }

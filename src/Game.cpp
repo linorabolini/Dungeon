@@ -1,6 +1,7 @@
 #include <Game.hpp>
 #include <MainMenu.hpp>
 #include <GameScreen.hpp>
+#include <tween.h>
 
 Game::Game()
 {
@@ -12,8 +13,12 @@ Game::Game()
 
 void Game::run()
 {
+    auto t0 = Locator::getClock()->getElapsedTime();
     while (win_.isOpen())
     {
+        float seconds = (Locator::getClock()->getElapsedTime()-t0).asSeconds();
+        tween::Tween::updateTweens(seconds);
+
         handleInput();
         update();
         render();

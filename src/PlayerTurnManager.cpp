@@ -8,11 +8,11 @@ void PlayerTurnManager::doTurn(Unit *unit)
 
     auto possibleActions = getUnitPossibleActions(unit, surroundingTiles);
 
-    highlightTiles(surroundingTiles);
+    highlightTiles(possibleActions, surroundingTiles);
 
     auto actionToDo = waitForPlayerAction(possibleActions);
 
-    highlightTiles(surroundingTiles, false);
+    highlightTiles(possibleActions, surroundingTiles, false);
 
     actionToDo();
 }
@@ -56,28 +56,73 @@ PlayerTurnManager::getUnitPossibleActions(Unit *unit, std::map<Direction, Tile *
         if (targetTile->unit)
         {
             actions[dir] = [=]() {
-                Locator::getGameManager()->getCamera()->setZoom(0.05f);
-                LOG("ATTACK !");
-                LOG("PIM !");
-                LOG("PAM !");
-                LOG("PUM !");
+                SpriteNode weapon(Locator::getResourceManager()->getTexture("weapon"));
+                SpriteNode selectedEffect(Locator::getResourceManager()->getTexture("selectedTileEffect"));
+                weapon.addChild(&selectedEffect);
 
-                auto txt = new sf::Texture();
-                txt->loadFromFile(Locator::getDirHelper()->getSpriteSheetPath() + "weapon.png");
+                std::vector<float> pos = {0, 0};
+                tween::Tween::make()
+                    .to(pos, {-16.f, 0})
+                    .fromTo(1.f, 2.f) // workaround to use onUpdate
+                    .onUpdate([&](){
+                        weapon.setPosition(pos[0], pos[1]);
+                    })
+                    .seconds(1);
 
-                auto weapon = new SpriteNode();
-                weapon->sprite.setTexture(*txt);
+                auto zoom = std::make_shared<float>(1.f);                
+                tween::Tween::make()
+                    .to(*zoom, 0.1f)
+                    .onUpdate([](float zoom){
+                        Locator::getGameManager()->getCamera()->setZoom(zoom);
+                    })
+                    .seconds(1)
+                    .retain(zoom);
 
-                unit->addChild(weapon);
+                unit->addChild(&weapon);
 
                 WAIT(1000);
-                Locator::getGameManager()->getCamera()->setZoom(0.2f);
+
+                // BATTLE PHASE
+
+                // TODO: play weapon effects
+                targetTile->unit->receiveDamage(10); // check if enemy dies and play dead anim TODO: create dead animations
+                
+                Font& font = Locator::getResourceManager()->getFont("Boo City");
+                TextNode damageText("10", font, 100);
+                damageText.setScale(0.1, 0.1);
+                damageText.setPosition(2.5f, -8.f);
+                targetTile->unit->addChild(&damageText);
+                std::vector<float> textPos = {2.5f, -8.f};
+                tween::Tween::make()
+                    .to(textPos, {2.5f, -16.f})
+                    .fromTo(1.f, 2.f) // workaround to use onUpdate
+                    .onUpdate([&](){
+                        damageText.setPosition(textPos[0], textPos[1]);
+                    })
+                    .easeoutsine()
+                    .seconds(0.5);
+
+                WAIT(1100);
+
+                targetTile->unit->removeChild(&damageText);
+
+                // END BATTLE PHASE
+
+                unit->removeChild(&weapon);
+
+                tween::Tween::make()
+                    .to(*zoom, 1.f)
+                    .onUpdate([](float zoom){
+                        Locator::getGameManager()->getCamera()->setZoom(zoom);
+                    })
+                    .seconds(1)
+                    .retain(zoom);
             };
         }
         else if (targetTile->GetPropertyString("solid") != "true")
         {
             actions[dir] = [=]() {
-                LOG("DUMMY ACTION");
+                LOG("MOVE TO TILE");
                 unit->setTile(targetTile);
             };
         }
@@ -86,19 +131,22 @@ PlayerTurnManager::getUnitPossibleActions(Unit *unit, std::map<Direction, Tile *
     return actions;
 }
 
-void PlayerTurnManager::highlightTiles(std::map<Direction, Tile *> tiles, bool value)
+void PlayerTurnManager::highlightTiles(std::map<Direction, UnitAction> possibleActions, std::map<Direction, Tile *> tiles, bool value)
 {
-    for (auto &reg : tiles)
+    static SpriteNode effect(Locator::getResourceManager()->getTexture("selectedTileEffect"));
+
+    for (auto &reg : possibleActions)
     {
-        if (reg.second)
+        auto tile = tiles[reg.first];
+        if (tile && tile->GetPropertyString("solid") != "true")
         {
             if (value)
             {
-                reg.second->sprite.setColor(sf::Color(0, 255, 0));
+                tile->addChild(&effect);
             }
             else
             {
-                reg.second->sprite.setColor(sf::Color::White);
+                tile->removeChild(&effect);
             }
         }
     }

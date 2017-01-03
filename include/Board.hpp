@@ -2,21 +2,15 @@
 #define BOARD_HPP
 
 #include "tinyxml.h"
-#include <iostream>
-#include <tinyxml.h>
-#include <fstream>
-#include <SFML/Graphics.hpp>
-#include <vector>
+#include "Utils.hpp"
 #include "SceneNode.hpp"
 #include "GameMacros.hpp"
-#include <thread>
 #include "Unit.hpp"
 #include "Tile.hpp"
 #include "TileObject.hpp"
 #include "TileLayer.hpp"
 #include "Tileset.hpp"
 #include "Tiletype.hpp"
-#include <Locator.hpp>
 
 class Unit;
 class TileLayer;

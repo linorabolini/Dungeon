@@ -301,7 +301,7 @@ TiXmlNode* TiXmlNode::ReplaceChild( TiXmlNode* replaceThis, const TiXmlNode& wit
 	if ( replaceThis->parent != this )
 		return 0;
 
-	if ( withThis.ToDocument() ) {
+	if ( withThis.ToXMLDocument() ) {
 		// A document can never be a child.	Thanks to Noam.
 		TiXmlDocument* document = GetDocument();
 		if ( document ) 
@@ -515,8 +515,8 @@ const TiXmlDocument* TiXmlNode::GetDocument() const
 
 	for( node = this; node; node = node->parent )
 	{
-		if ( node->ToDocument() )
-			return node->ToDocument();
+		if ( node->ToXMLDocument() )
+			return node->ToXMLDocument();
 	}
 	return 0;
 }

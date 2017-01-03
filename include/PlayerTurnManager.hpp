@@ -7,6 +7,8 @@
 #include "GameScreen.hpp"
 #include "GameMacros.hpp"
 #include "TurnManager.hpp"
+#include "TextNode.hpp"
+#include <tween.h>
 
 class GameScreen;
 class Unit;
@@ -20,7 +22,7 @@ class PlayerTurnManager : public TurnManager
     virtual void doTurn(Unit *unit);
 
   private:
-    void highlightTiles(std::map<Direction, Tile *>, bool value = true);
+    void highlightTiles(std::map<Direction, UnitAction> possibleActions, std::map<Direction, Tile *>, bool value = true);
     UnitAction waitForPlayerAction(std::map<Direction, UnitAction>);
     std::map<Direction, UnitAction> getUnitPossibleActions(Unit *, std::map<Direction, Tile *>);
 };

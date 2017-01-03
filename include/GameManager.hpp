@@ -1,13 +1,13 @@
 #ifndef GameManager_HPP
 #define GameManager_HPP
 
+#include "Utils.hpp"
 #include "GameMacros.hpp"
 #include "Unit.hpp"
 #include "TurnManager.hpp"
 #include "PlayerTurnManager.hpp"
 #include "Camera.hpp"
 #include "Board.hpp"
-#include <thread>
 #include "CommandQueue.hpp"
 
 class Board;

@@ -162,7 +162,8 @@ bool Board::processTileLayerXML(TiXmlElement* map)
                 {
                     tile->tiletype = tiletype;
                     tile->properties = tiletype->properties;
-                    tile->sprite.setTexture(tileset->texture);
+                    Texture& texture = Locator::getResourceManager()->getTexture(tileset->name);
+                    tile->sprite.setTexture(texture);
                     tile->sprite.setTextureRect(tileset->subRects[subRectToUse]);
                     tile->sprite.setColor(sf::Color(255, 255, 255, layer->opacity)); //Set opacity of the tile
                 }
@@ -195,15 +196,10 @@ bool Board::processTilesetXML(TiXmlElement* map)
         Tileset tileset;
         tileset.name = tilesetElement->Attribute("name");
 
-        //Tileset image
-        auto image = tilesetElement->FirstChildElement("image");
-        std::string imagepath = image->Attribute("source");
-
-        tileset.texture.loadFromFile(Locator::getDirHelper()->getMapPath() + imagepath);
-        tileset.texture.setSmooth(false);
-
         // Clip Rects 
         tileset.firstTileID = atoi(tilesetElement->Attribute("firstgid"));
+        int spacing = atoi(tilesetElement->Attribute("spacing"));
+        int margin = atoi(tilesetElement->Attribute("margin"));
         int tilecount = atoi(tilesetElement->Attribute("tilecount"));
         int columns = atoi(tilesetElement->Attribute("columns"));
         int rows = tilecount / columns;
@@ -215,12 +211,7 @@ bool Board::processTilesetXML(TiXmlElement* map)
         {
             for (int x = 0; x < columns; x++)
             {
-                sf::Rect<int> rect;
-                rect.top = y * tileHeight_;
-                rect.height = tileHeight_;
-                rect.left = x * tileWidth_;
-                rect.width = tileWidth_;
-                tileset.subRects.push_back(rect);
+                tileset.subRects.push_back(Utils::getRectForTilemap(x, y, tileWidth_, tileHeight_, spacing, margin));
             }
         }
         
