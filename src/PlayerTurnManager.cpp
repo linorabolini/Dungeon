@@ -117,6 +117,8 @@ PlayerTurnManager::getUnitPossibleActions(Unit *unit, std::map<Direction, Tile *
                     })
                     .seconds(1)
                     .retain(zoom);
+
+                WAIT(1100);
             };
         }
         else if (targetTile->GetPropertyString("solid") != "true")
