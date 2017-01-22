@@ -15,8 +15,10 @@ class Tile : public XMLNode, public SpriteNode
 public:
   sf::Vector2f position;
   Tiletype *tiletype;
-  Unit *unit = nullptr;
-  std::map<Direction, Tile *> surroundingTiles;
+  std::map<Direction, Tile*> surroundingTiles;
+  int tilemapRectIndex = 0;
+
+  bool isConnectedTo(Tile& other);
 };
 
 #endif /* TILE_HPP */

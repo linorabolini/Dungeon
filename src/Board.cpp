@@ -1,12 +1,13 @@
 #include <Board.hpp>
+using namespace std;
 
-bool Board::loadFromFile(std::string dir, std::string filename)
+bool Board::loadFromFile(string filename)
 {
-    TiXmlDocument boardFile(dir + filename);
+    TiXmlDocument boardFile(filename);
 
     if (!boardFile.LoadFile())
     {
-        std::cout << "Loading board " << dir << filename << " failed." << std::endl;
+        cout << "Loading board " << filename << " failed." << endl;
         return false;
     }
 
@@ -31,7 +32,7 @@ bool Board::loadFromFile(std::string dir, std::string filename)
     return true;
 }
 
-TileLayer* Board::getTileLayer(std::string name)
+TileLayer* Board::getTileLayer(string name)
 {
     for (int i = 0; i < tileLayers_.size(); i++)
     {
@@ -41,7 +42,7 @@ TileLayer* Board::getTileLayer(std::string name)
     return nullptr;
 }
 
-TileObject* Board::getTileObject(std::string name)
+TileObject* Board::getTileObject(string name)
 {
     for (int i = 0; i < tileObjects_.size(); i++)
     {
@@ -51,16 +52,13 @@ TileObject* Board::getTileObject(std::string name)
     return nullptr;
 }
 
-Tile* Board::findObjectTileInTileLayer(TileObject* tileObject, std::string name)
+Tile& Board::findObjectTileInTileLayer(TileObject* tileObject, string name)
 {
     return findObjectTileInTileLayer(tileObject, getTileLayer(name));
 }
 
-Tile* Board::findObjectTileInTileLayer(TileObject* tileObject, TileLayer* layer)
+Tile& Board::findObjectTileInTileLayer(TileObject* tileObject, TileLayer* layer)
 {
-    if(!tileObject){
-        return nullptr;
-    }
     auto rect = tileObject->rect;
     auto x = rect.left / tileWidth_;
     auto y = rect.top / tileHeight_;
@@ -75,7 +73,6 @@ bool Board::processTileTypesXML(TiXmlElement* tilesetElement, Tileset* tileset)
     while (tileElement)
     {
         Tiletype type;
-        type.id = atoi(tileElement->Attribute("id"));
         type.tileset = tileset;
 
         auto properties = tileElement->FirstChildElement("properties");
@@ -85,15 +82,15 @@ bool Board::processTileTypesXML(TiXmlElement* tilesetElement, Tileset* tileset)
             auto property = properties->FirstChildElement("property");
             while (property)
             {
-                std::string name = property->Attribute("name");
-                std::string value = property->Attribute("value");
+                string name = property->Attribute("name");
+                string value = property->Attribute("value");
 
                 type.properties[name] = value;
 
                 property = property->NextSiblingElement("property");
             }
         }
-        tileTypes_[type.id] = type;
+        tileTypes_.push_back(type);
 
         tileElement = tileElement->NextSiblingElement("tile");
     }
@@ -104,18 +101,30 @@ bool Board::processTileTypesXML(TiXmlElement* tilesetElement, Tileset* tileset)
 bool Board::processTileLayerXML(TiXmlElement* map)
 {
     auto layerElement = map->FirstChildElement("layer");
+    int layerCount = 0;
     while (layerElement)
     {
-        auto layer = new TileLayer();
-        layer->name = layerElement->Attribute("name");
+        layerCount++;
+        layerElement = layerElement->NextSiblingElement("layer");
+    }
+
+    layerElement = map->FirstChildElement("layer");
+    tileLayers_.resize(layerCount);
+    
+
+    int currentLayer = 0;
+    while (layerElement)
+    {
+        TileLayer& layer = tileLayers_[currentLayer];
+        layer.name = layerElement->Attribute("name");
         if (layerElement->Attribute("opacity") != NULL) //check if opacity attribute exists
         {
             float opacity = strtod(layerElement->Attribute("opacity"), NULL); //convert the (string) opacity element to float
-            layer->opacity = 255 * opacity;
+            layer.opacity = 255 * opacity;
         }
         else
         {
-            layer->opacity = 255; //if the attribute doesnt exist, default to full opacity
+            layer.opacity = 255; //if the attribute doesnt exist, default to full opacity
         }
 
         //Tiles
@@ -124,64 +133,66 @@ bool Board::processTileLayerXML(TiXmlElement* map)
 
         if (layerDataElement == NULL)
         {
-            std::cout << "Bad map. No layer information found." << std::endl;
+            cout << "Bad map. No layer information found." << endl;
         }
 
-        std::string tilesElement = layerDataElement->GetText();
+        string tilesElement = layerDataElement->GetText();
         char delimiter = ',';
-        std::vector<int> tileIDS;
-        std::string acc = "";
+        vector<int> tileIDS;
+        string acc = "";
         for (int i = 0; i < tilesElement.size(); i++)
         {
             if (tilesElement[i] == delimiter)
             {
-                tileIDS.push_back(std::stoi(acc));
+                tileIDS.push_back(stoi(acc));
                 acc = "";
             }
             else
                 acc += tilesElement[i];
         }
-        tileIDS.push_back(std::stoi(acc));
+        tileIDS.push_back(stoi(acc));
+
+        layer.tiles.resize(tileIDS.size());
 
         int i = 0;
+        auto resourceManager = Locator::getResourceManager();
         for (auto &tileGID : tileIDS)
         {
-            auto tile = new Tile(); //sprite for the tile
-            tile->position.x = i % cols_;
-            tile->position.y = i / cols_;
-            tile->setPosition(tile->position.x  * tileWidth_, tile->position.y * tileHeight_);
+            Tile& tile = layer.tiles[i]; //sprite for the tile
+            tile.position.x = i % cols_;
+            tile.position.y = i / cols_;
+            tile.setPosition(tile.position.x  * tileWidth_, tile.position.y * tileHeight_);
 
             if(tileGID > 0)
             {
                 auto tiletype = &tileTypes_[tileGID-1];
                 auto tileset = tiletype->tileset;
                 int subRectToUse = tileGID - tileset->firstTileID; //Work out the subrect ID to 'chop up' the tilesheet image.
-                tile->id = subRectToUse;
+                tile.tilemapRectIndex = subRectToUse;
                 
-                if (subRectToUse >= 0)                    //we only need to (and only can) create a sprite/tile if there is one to display
+                if (subRectToUse >= 0) //we only need to (and only can) create a sprite/tile if there is one to display
                 {
-                    tile->tiletype = tiletype;
-                    tile->properties = tiletype->properties;
-                    Texture& texture = Locator::getResourceManager()->getTexture(tileset->name);
-                    tile->sprite.setTexture(texture);
-                    tile->sprite.setTextureRect(tileset->subRects[subRectToUse]);
-                    tile->sprite.setColor(sf::Color(255, 255, 255, layer->opacity)); //Set opacity of the tile
+                    tile.tiletype = tiletype;
+                    tile.properties = tiletype->properties;
+
+                    if(resourceManager) {
+                        Texture& texture = resourceManager->getTexture(tileset->name);
+                        tile.sprite.setTexture(texture);
+                        tile.sprite.setTextureRect(tileset->subRects[subRectToUse]);
+                        tile.sprite.setColor(sf::Color(255, 255, 255, layer.opacity)); //Set opacity of the tile
+                    }
                 }
             } else { // tiletype does not exist
-                tile->id = -1;
+                tile.tilemapRectIndex = -1;
             }
 
-            //add tile to layer
-            layer->tiles.push_back(tile);
-            layer->addChild(tile);
-
+            layer.addChild(&tile);
             //increment i
             i++;
         }
 
-        tileLayers_.push_back(*layer);
-        addChild(layer);
-
+        addChild(&layer);
+        currentLayer++;
         layerElement = layerElement->NextSiblingElement("layer");
     }
 
@@ -204,7 +215,7 @@ bool Board::processTilesetXML(TiXmlElement* map)
         int columns = atoi(tilesetElement->Attribute("columns"));
         int rows = tilecount / columns;
 
-        std::vector<sf::Rect<int>> subRects; //container of subrects (to divide the tilesheet image up)
+        vector<sf::Rect<int>> subRects; //container of subrects (to divide the tilesheet image up)
 
         //tiles/subrects are counted from 0, left to right, top to bottom
         for (int y = 0; y < rows; y++)
@@ -239,12 +250,12 @@ bool Board::processObjectgroupXML(TiXmlElement* map)
             objectElement = objectGroupElement->FirstChildElement("object");
             while (objectElement) //loop through objects_
             {
-                std::string objectType;
+                string objectType;
                 if (objectElement->Attribute("type") != NULL)
                 {
                     objectType = objectElement->Attribute("type");
                 }
-                std::string objectName;
+                string objectName;
                 if (objectElement->Attribute("name") != NULL)
                 {
                     objectName = objectElement->Attribute("name");
@@ -276,8 +287,8 @@ bool Board::processObjectgroupXML(TiXmlElement* map)
                     {
                         while (prop)
                         {
-                            std::string propertyName = prop->Attribute("name");
-                            std::string propertyValue = prop->Attribute("value");
+                            string propertyName = prop->Attribute("name");
+                            string propertyValue = prop->Attribute("value");
 
                             tileObject.properties[propertyName] = propertyValue;
 
@@ -295,55 +306,47 @@ bool Board::processObjectgroupXML(TiXmlElement* map)
     }
     else
     {
-        std::cout << "No TileObject layers found..." << std::endl;
+        cout << "No TileObject layers found..." << endl;
     }
 
     return true;
 }
 
-using namespace std;
-void Board::connectTilesFromTileLayer(std::string name)
+void Board::connectTilesFromTileLayers()
+{
+    for( auto& layer: tileLayers_){
+        connectTilesFromTileLayer(&layer);
+    }
+}
+
+void Board::connectTilesFromTileLayer(string name)
 {
     auto layer = getTileLayer(name);
     if(!layer)
     {
-        std::cout << "No layer to load the Board was found with the name: " << name << std::endl;
+        cout << "No layer to load the Board was found with the name: " << name << endl;
         return;
     }
-
-    for (int i = 0; i < layer->tiles.size(); i++)
-    {
-
-        auto tile = layer->tiles[i];
-        int col = (i % cols_);
-        int row = (i / cols_);
-
-        if(col == 0)
-        {
-            cout << endl;
-        }
-
-        auto isSolid = tile->GetPropertyString("solid") == "true" ? 1 : 0;
-        cout << isSolid;
-
-        if (col > 0)
-        {
-            tile->surroundingTiles[Direction::LEFT] = layer->tiles[i - 1];
-        }
-        if (col < cols_ - 1)
-        {
-            tile->surroundingTiles[Direction::RIGHT]  = layer->tiles[i + 1];
-        }
-        if (row > 0)
-        {
-            tile->surroundingTiles[Direction::UP]  = layer->tiles[i - cols_];
-        }
-        if (row < rows_ - 1)
-        {
-            tile->surroundingTiles[Direction::DOWN]  = layer->tiles[i + cols_];
-        }
-    }
-    cout << endl;
+    connectTilesFromTileLayer(layer);
 }
 
+void Board::connectTilesFromTileLayer(TileLayer* layer)
+{
+    layer->connectTiles(rows_, cols_);
+}
 
+Tile* Board::getUnitTile(Unit* unit) { return bidirectionalUnitsToTiles_.get(unit); }
+void Board::setUnitTile(Unit* unit, Tile* tile) {
+    bidirectionalUnitsToTiles_.set(unit, tile);
+    if(tile && unit) {
+        tile->addChild(unit);
+    } else if(!tile) {
+        unit->setParent(nullptr);
+    }
+}
+
+Unit* Board::getTileUnit(Tile* tile) { return bidirectionalUnitsToTiles_.get(tile); }
+
+std::map<Direction, Tile*>& Board::getSurroundingTiles(Tile* tile) {
+    return tile->surroundingTiles;
+}

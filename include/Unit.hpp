@@ -3,42 +3,37 @@
 
 #include <SFML/Graphics.hpp>
 #include "SpriteNode.hpp"
-#include "Tile.hpp"
-#include "TurnManager.hpp"
-#include "GameManager.hpp"
 
 using namespace std;
 
 class Tile;
-class TurnManager;
 class Unit : public SpriteNode
 {
 public:
-    sf::Vector2f position;
-    Tile *tile = nullptr;
-
-    void setTile(Tile* theTile);
-
-    void doTurn();
-    void setTurnManager(TurnManager* turnManager) { turnManager_ = turnManager; }
-private:
-    TurnManager* turnManager_;
-
 
 // move it to a component ?
 public:
     
+    // delegate to component
     void receiveDamage(int damage) {
         hp_ = max(0, hp_ - damage);
+
+        if(hp_ == 0) {
+            die(); 
+        }
     }
+    void die();
+
     int getHP() {
         return hp_;
     }
     void setHP(int value) {
         hp_ = value;
     }
+
+    virtual bool isDead() { return hp_ == 0; }
 private:
-    int hp_;
+    int hp_ = 0;
 };
 
 

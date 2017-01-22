@@ -7,7 +7,7 @@ SRCEXT = cpp
 SOURCES_TEST = $(shell find test -type f -name *.$(SRCEXT))
 SOURCES = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS = -g --std=c++11 -DTIXML_USE_STL -DDEBUG
+CFLAGS = -g --std=c++11 -DTIXML_USE_STL -DDEBUG $(EXTRA_FLAGS)
 LIB = -L/Users/linorabolini/Documents/Projects/Cpp/SFML/SFML-2.4.1/lib -lsfml-graphics -lsfml-window -lsfml-system
 INC = -I include -I /Users/linorabolini/Documents/Projects/Cpp/SFML/SFML-2.4.1/include
 
@@ -27,7 +27,7 @@ clean:
 game: $(TARGET)
 
 # Tests
-tests: $(SOURCES_TEST)
+tests: $(SOURCES_TEST) $(OBJECTS)
 	$(CC) $(CFLAGS) $^ $(INC) $(LIB) -o bin/tests
 
 test/%.o: tests/%.cpp

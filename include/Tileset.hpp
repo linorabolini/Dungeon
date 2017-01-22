@@ -1,7 +1,6 @@
 #ifndef TILESET_HPP
 #define TILESET_HPP
 
-#include <SFML/Graphics.hpp>
 #include "XMLNode.hpp"
 
 class Tileset : public XMLNode

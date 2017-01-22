@@ -11,7 +11,8 @@
             "taskName": "game"
         },
         {
-            "taskName": "tests"
+            "taskName": "tests",
+            "args": ["EXTRA_FLAGS=-DTESTING"]
         }
     ]
 }

@@ -13,13 +13,9 @@ Screen *ScreenManager::loadScreen(Screen *screen)
     return current_;
 }
 
-void ScreenManager::handleInput(sf::RenderWindow *win_)
-{
-    current_->handleInput(win_);
-}
-
 void ScreenManager::update()
 {
+    current_->removeDisposedChildren();
     current_->update();
 }
 

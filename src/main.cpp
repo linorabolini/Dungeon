@@ -1,6 +1,7 @@
 #include <Game.hpp>
 #include <Locator.hpp>
 
+#ifndef TESTING
 int main(int argc, char *argv[])
 {
     auto sys = new DirHelper();
@@ -8,7 +9,6 @@ int main(int argc, char *argv[])
     sys->setMapPath(sys->getResPath() + "map/");
     sys->setFontPath(sys->getResPath() + "font/");
     sys->setSpriteSheetPath(sys->getResPath() + "spritesheet/");
-
     Locator::provide(sys);
 
     auto gm = new GameManager();
@@ -20,8 +20,10 @@ int main(int argc, char *argv[])
     Game game;
     game.run();
 
+    delete resourceManager;
     delete sys;
     delete gm;
 
     return 0;
 }
+#endif

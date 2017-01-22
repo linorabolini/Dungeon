@@ -9,6 +9,7 @@
 #include "Camera.hpp"
 #include "Board.hpp"
 #include "CommandQueue.hpp"
+#include <thread>
 
 class Board;
 
@@ -27,6 +28,8 @@ class GameManager : public SceneNode
     Board *getBoard() { return board_; };
     CommandQueue commandQueue;
 
+    bool isGameFinished() { return gameFinished_; }
+
   private:
     void initGame();
     void turnLoop();
@@ -35,7 +38,7 @@ class GameManager : public SceneNode
     Board *board_ = nullptr;
     Camera *camera_ = nullptr;
     std::thread *turnThread_ = nullptr;
-    int levelFinished_ = 0;
+    bool gameFinished_ = false;
 
     SceneNode *uiLayer_;
     SceneNode *gameLayer_;

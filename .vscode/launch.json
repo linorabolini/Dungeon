@@ -11,7 +11,8 @@
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],
-            "externalConsole": true,
+            "externalConsole": false,
+            "internalConsoleOptions": "openOnSessionStart",
             "linux": {
                 "MIMode": "gdb"
             },
@@ -23,26 +24,6 @@
             }
         },
         {
-            "name": "C++ Attach",
-            "type": "cppdbg",
-            "request": "attach",
-            "program": "${workspaceRoot}/bin/game",
-            "processId": "${command.pickProcess}",
-            "linux": {
-                "MIMode": "gdb"
-            },
-            "osx": {
-                "MIMode": "gdb"
-            },
-            "windows": {
-                "MIMode": "gdb"
-            },
-            "logging": {
-                "moduleLoad": false,
-                "trace": true
-            }
-        },
-        {
             "name": "C++ Test",
             "type": "cppdbg",
             "request": "launch",
@@ -50,6 +31,7 @@
             "args": [],
             "preLaunchTask": "tests",
             "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceRoot}",
             "environment": [],
             "externalConsole": false,

@@ -2,16 +2,14 @@
 #define SCREENMANAGER_HPP
 
 #include "Screen.hpp"
-#include "SceneNode.hpp"
 
-class ScreenManager : public SceneNode
+class ScreenManager
 {
   public:
     Screen *loadScreen(Screen *screen);
-    Screen *currentScreen() { return current_; };
-    void handleInput(sf::RenderWindow *win_);
-    virtual void update();
-    virtual void render(sf::RenderWindow *win_);
+    Screen *getCurrentScreen() { return current_; };
+    void update();
+    void render(sf::RenderWindow *win_);
 
   private:
     Screen *current_ = nullptr;

@@ -1,5 +1,7 @@
 #include <GameManager.hpp>
 
+using namespace std;
+
 void GameManager::load()
 {
     gameLayer_ = new SceneNode();
@@ -16,6 +18,15 @@ void GameManager::load()
     // create a camera
     camera_ = new Camera();
     addChild(camera_);
+
+    // load textures
+    auto rm = Locator::getResourceManager();
+    rm->registerTexture("dungeon3", Locator::getDirHelper()->getSpriteSheetPath() + "dungeon3.png");
+    rm->registerTexture("weapon", Locator::getDirHelper()->getSpriteSheetPath() + "weapon2.png");
+    rm->registerTexture("selectedTileEffect", Locator::getDirHelper()->getSpriteSheetPath() + "selectedTileEffect.png");
+
+
+    rm->registerFont("Boo City", Locator::getDirHelper()->getFontPath() + "Boo City.ttf");
 
     // start the turn loop in a parallel thread
     turnThread_ = new std::thread(&GameManager::turnLoop, this);
@@ -62,19 +73,19 @@ void GameManager::turnLoop()
 {
     initGame();
 
-    while (!levelFinished_)
+    while (!gameFinished_)
     {
         // new round
         LOG("NEW ROUND");
         for (int i = 0; i < units_.size(); i++)
         {
-            if (levelFinished_)
+            if (gameFinished_)
                 break;
            auto unit = units_[i];
 
             // new turn
             LOG("NEW TURN");
-            if (unit)
+            if (unit && !unit->isDead())
             {
                 std::thread turnThread(&GameManager::doUnitTurn, this, unit);
                 turnThread.join();
@@ -86,7 +97,8 @@ void GameManager::turnLoop()
         }
 
         // end round
-        LOG("END ROUND");
+        LOG("END ROUND ");
+        cout << SceneNode::nodeCount << endl;
     }
     LOG("LEVEL FINISHED OR GAME OVER");
 }
@@ -95,6 +107,7 @@ void GameManager::initGame()
 {
     // load Board
     // load Players + Treasuers + Traps + Enemies
+    
     loadBoard();
     addPlayer();
     return;
@@ -103,30 +116,23 @@ void GameManager::initGame()
 void GameManager::doUnitTurn(Unit *unit)
 {
     LOG("DOING UNIT TURN");
-    unit->doTurn();
+    static auto playerTurnManager = new PlayerTurnManager();
+    playerTurnManager->doTurn(unit, board_);
     return;
 }
 
 void GameManager::addPlayer()
 {
-    // add player to the board =========================
+     auto rm = Locator::getResourceManager();
 
+    // add player to the board =========================
     auto playerObject = board_->getTileObject("Player");
-    auto playerTile = board_->findObjectTileInTileLayer(playerObject, "Board");
-    auto playerTurnManager = new PlayerTurnManager();
+    auto& playerTile = board_->findObjectTileInTileLayer(playerObject, "Board");
 
     auto player = new Unit();
-    player->setTurnManager(playerTurnManager);
-    player->setTile(playerTile);
-
-    // load textures
-    auto rm = Locator::getResourceManager();
-    rm->registerTexture("dungeon3", Locator::getDirHelper()->getSpriteSheetPath() + "dungeon3.png");
-    rm->registerTexture("weapon", Locator::getDirHelper()->getSpriteSheetPath() + "weapon2.png");
-    rm->registerTexture("selectedTileEffect", Locator::getDirHelper()->getSpriteSheetPath() + "selectedTileEffect.png");
-
-
-    rm->registerFont("Boo City", Locator::getDirHelper()->getFontPath() + "Boo City.ttf");
+    player->setHP(20);
+    // player->setTurnManager(playerTurnManager);
+    board_->setUnitTile(player, &playerTile);
 
     player->sprite.setTexture(rm->getTexture("dungeon3"));
     player->sprite.setTextureRect(Utils::getRectForTilemap(20, 7, 16, 16));
@@ -135,13 +141,14 @@ void GameManager::addPlayer()
 
     camera_->setTarget(player);
 
-    playerObject = board_->getTileObject("Enemy");
-    playerTile = board_->findObjectTileInTileLayer(playerObject, "Board");
+    auto enemyObject = board_->getTileObject("Enemy");
+    auto& enemyTile = board_->findObjectTileInTileLayer(enemyObject, "Board");
     auto turnManager = new TurnManager();
 
     player = new Unit();
-    player->setTurnManager(turnManager);
-    player->setTile(playerTile);
+    player->setHP(20);
+    // player->setTurnManager(turnManager);
+    board_->setUnitTile(player, &enemyTile);
 
     player->sprite.setTexture(rm->getTexture("dungeon3"));
     player->sprite.setTextureRect(Utils::getRectForTilemap(21, 7, 16, 16));
@@ -157,7 +164,6 @@ void GameManager::addUnit(Unit* unit)
 void GameManager::loadBoard()
 {
     // Load map
-    board_->loadFromFile(Locator::getDirHelper()->getMapPath(), "map.tmx");
+    board_->loadFromFile(Locator::getDirHelper()->getMapPath() + "map.tmx");
     board_->connectTilesFromTileLayer("Board");
-    addChild(board_);
 }

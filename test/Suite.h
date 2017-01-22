@@ -14,12 +14,14 @@
 #include <vector>
 #include <iostream>
 
+using namespace std;
+
 class Suite
 {
   public:
     typedef void (Suite::*Func)();
 
-    void registerTest(Func func, const std::string &name)
+    void registerTest(Func func, const string &name)
     {
         tests.push_back(TestData(func, name));
     }
@@ -28,9 +30,9 @@ class Suite
     {
         for (auto &test : tests)
         {
-            std::cout << test._name << std::endl;
-            std::bind(test._func, this)();
-            std::cout << "  OK" << std::endl;
+            cout << test._name << endl;
+            bind(test._func, this)();
+            cout << "  OK" << endl;
         }
     }
 
@@ -38,14 +40,14 @@ class Suite
     struct TestData
     {
         Func _func;
-        std::string _name;
+        string _name;
 
-        TestData(Func func, const std::string &name)
+        TestData(Func func, const string &name)
             : _func(func), _name(name) {}
     };
 
   private:
-    std::vector<TestData> tests;
+    vector<TestData> tests;
 };
 
 #define ADD_TEST(func) \

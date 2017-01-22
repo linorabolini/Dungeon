@@ -2,10 +2,22 @@
 #define SCENENODE_HPP
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
+using namespace std;
 class SceneNode : public sf::Transformable
 {
 public:
+    static int nodeCount;
+    int nodeId = 0;
+    SceneNode(){
+        nodeId = nodeCount++;
+        std::cout << "++ creating SceneNode " << nodeId <<  std::endl;
+    };
+    ~SceneNode() {
+        nodeCount--;
+        std::cout << "-- deleting SceneNode " << nodeId << " -- remaining: " << nodeCount << std::endl;
+    }
     virtual void updateCurrent() {};
     virtual void updateChildren() {
         for (auto &child : children_)
@@ -39,14 +51,51 @@ public:
         });
 
         SceneNode* result = *found;
-        result->parent = nullptr;
+        result->parent_ = nullptr;
         children_.erase(found);
         return result;
     }
 
-    void addChild(SceneNode* node) {
-        node->parent = this;
-        children_.push_back(node); 
+    virtual void dispose() {
+        disposed_ = true;
+    }
+
+    bool isDisposed() {
+        return disposed_;
+    }
+
+    void removeDisposedChildren()
+    {
+        // Remove all children which request so
+        auto wreckfieldBegin = std::remove_if(children_.begin(), children_.end(), std::mem_fn(&SceneNode::isDisposed));
+        // std::for_each(wreckfieldBegin, children_.end(), std::default_delete<SceneNode>());
+        children_.erase(wreckfieldBegin, children_.end());
+
+        // Call function recursively for all remaining children
+        std::for_each(children_.begin(), children_.end(), std::mem_fn(&SceneNode::removeDisposedChildren));
+    }
+
+    void addChild(SceneNode* node, bool allowDuplicate=false) {
+        if(node->parent_ && !allowDuplicate) {
+            if(node->parent_ == this) {
+                return;
+            }
+            node->parent_->removeChild(node);
+        }
+        node->parent_ = this;
+        children_.push_back(node);
+    }
+
+    void setParent(SceneNode* node) {
+        if(this->parent_) {
+            if(this->parent_ == node) {
+                return;
+            }
+            this->parent_->removeChild(this);
+        }
+        if(node){
+            node->addChild(this);
+        }
     }
 
     sf::Vector2f getWorldPosition() const
@@ -58,14 +107,17 @@ public:
     {
         sf::Transform transform = sf::Transform::Identity;
 
-        for (const SceneNode* node = this; node != nullptr; node = node->parent)
+        for (const SceneNode* node = this; node != nullptr; node = node->parent_)
             transform = node->getTransform() * transform;
 
         return transform;
     }
+
+    SceneNode* getParent() { return parent_; }
 private:
     std::vector<SceneNode*> children_;
-    SceneNode* parent;
+    SceneNode* parent_ = nullptr;
+    bool disposed_ = false;
 };
 
 

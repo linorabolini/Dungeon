@@ -27,7 +27,15 @@ void Game::run()
 
 void Game::handleInput()
 {
-    screenManager_.handleInput(&win_);
+    sf::Event event;
+    while (win_.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            win_.close();
+
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            win_.close();
+    }
 }
 
 void Game::update()
