@@ -10,10 +10,13 @@
 #include "Board.hpp"
 #include "CommandQueue.hpp"
 #include <thread>
+#include "Observer.hpp"
+
+#include "GameState.hpp"
 
 class Board;
 
-class GameManager : public SceneNode
+class GameManager : public SceneNode, public dungeon::Observer
 {
   public:
     virtual void updateCurrent();
@@ -29,6 +32,9 @@ class GameManager : public SceneNode
     CommandQueue commandQueue;
 
     bool isGameFinished() { return gameFinished_; }
+
+    GameState& getGameState() { return gameState_; }
+    void setGameState(GameState& gs) { gameState_ = gs; }
 
   private:
     void initGame();
@@ -47,6 +53,8 @@ class GameManager : public SceneNode
 
     void addPlayer();
     void loadBoard();
+
+    GameState gameState_;
 };
 
 #endif /* GameManager_HPP */

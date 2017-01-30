@@ -57,7 +57,7 @@ PlayerTurnManager::getUnitPossibleActions(Unit *unit, Board* board)
 
         // COMMAND PATTERN
         Unit* tileUnit = board->getTileUnit(targetTile);
-        if (tileUnit)
+        if (tileUnit && !tileUnit->isDead())
         {
             Unit& sourceUnit = *unit;
             Unit& targetUnit = *tileUnit;

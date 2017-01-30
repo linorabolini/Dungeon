@@ -5,5 +5,7 @@ void Unit::die() {
     // Unit controller die sequence
 
     // Locator::getGameManager()->removeUnit(this);
-    dispose();
+    // dispose();
+    // sprite.setOrigin(8, 8);
+    sprite.setRotation(90);
 }

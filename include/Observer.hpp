@@ -6,8 +6,13 @@
 #include <map>
 #include <string>
 
+namespace dungeon 
+{
+
 struct Event
 {
+    Event(std::string type_) : type(type_) {};
+    Event();
     std::string type;
 };
 
@@ -27,5 +32,6 @@ class Observer
     std::map<std::string, std::function<void(Event)>> callbacks_;
     std::map<Observer *, Observer *> targets_;
 };
+}
 
 #endif /* OBSERVER_HPP */

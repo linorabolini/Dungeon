@@ -1,5 +1,7 @@
 #include "suites/BoardSuite.h"
 #include "suites/ExampleSuite.h"
+#include "suites/GameManagerSuite.h"
+#include "suites/ObserverSuite.h"
 #include "TestRunner.h"
 
 int main(int argc, char *argv[])
@@ -10,12 +12,18 @@ int main(int argc, char *argv[])
     }
 
     TestRunner tr;
+
+    // suites
     ExampleSuite ex;
     BoardSuite board;
+    GameManagerSuite gameManagerSuite;
+    ObserverSuite observerSuite;
 
     // add tests
     tr.add(&ex);
     tr.add(&board);
+    tr.add(&gameManagerSuite);
+    tr.add(&observerSuite);
 
     // run tests
     tr.run();

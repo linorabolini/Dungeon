@@ -25,7 +25,6 @@ void GameManager::load()
     rm->registerTexture("weapon", Locator::getDirHelper()->getSpriteSheetPath() + "weapon2.png");
     rm->registerTexture("selectedTileEffect", Locator::getDirHelper()->getSpriteSheetPath() + "selectedTileEffect.png");
 
-
     rm->registerFont("Boo City", Locator::getDirHelper()->getFontPath() + "Boo City.ttf");
 
     // start the turn loop in a parallel thread
@@ -81,15 +80,17 @@ void GameManager::turnLoop()
         {
             if (gameFinished_)
                 break;
+
            auto unit = units_[i];
+
+           if(!unit || unit->isDisposed() || unit->isDead()){
+               continue;
+           }
 
             // new turn
             LOG("NEW TURN");
-            if (unit && !unit->isDead())
-            {
-                std::thread turnThread(&GameManager::doUnitTurn, this, unit);
-                turnThread.join();
-            }
+            std::thread turnThread(&GameManager::doUnitTurn, this, unit);
+            turnThread.join();
 
             // end turn
             LOG("END TURN");
@@ -99,6 +100,10 @@ void GameManager::turnLoop()
         // end round
         LOG("END ROUND ");
         cout << SceneNode::nodeCount << endl;
+
+        // Remove all children which request so
+        auto wreckfieldBegin = std::remove_if(units_.begin(), units_.end(), std::mem_fn(&SceneNode::isDisposed));
+        units_.erase(wreckfieldBegin, units_.end());
     }
     LOG("LEVEL FINISHED OR GAME OVER");
 }
@@ -146,7 +151,9 @@ void GameManager::addPlayer()
     auto turnManager = new TurnManager();
 
     player = new Unit();
-    player->setHP(20);
+    player->setHP(5);
+    player->sprite.setOrigin(8,8);
+    player->sprite.setPosition(8,8);
     // player->setTurnManager(turnManager);
     board_->setUnitTile(player, &enemyTile);
 

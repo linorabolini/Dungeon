@@ -1,6 +1,9 @@
 #include <Observer.hpp>
 
-void Observer::on(std::string type, std::function<void(Event)> callback)
+namespace dungeon 
+{
+
+void Observer::on(std::string type, std::function<void(const Event)> callback)
 {
     callbacks_[type] = callback;
 }
@@ -33,4 +36,6 @@ void Observer::addObserver(Observer *target)
 void Observer::removeObserver(Observer *target)
 {
     targets_.erase(target);
+}
+
 }

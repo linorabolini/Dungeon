@@ -1,3 +1,10 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+    "files.associations": {
+        "cmath": "cpp",
+        "*h*hfunctional": "cpp",
+        "functional": "cpp",
+        "utility": "cpp",
+        "*h*htype_traits": "cpp"
+    }
 }
