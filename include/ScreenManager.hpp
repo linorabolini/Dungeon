@@ -1,6 +1,4 @@
-#ifndef SCREENMANAGER_HPP
-#define SCREENMANAGER_HPP
-
+#pragma once
 #include "Screen.hpp"
 
 class ScreenManager
@@ -15,4 +13,3 @@ class ScreenManager
     Screen *current_ = nullptr;
 };
 
-#endif /* SCREENMANAGER_HPP */

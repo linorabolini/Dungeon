@@ -1,6 +1,4 @@
-#ifndef OBSERVER_HPP
-#define OBSERVER_HPP
-
+#pragma once
 #include <functional>
 #include <vector>
 #include <map>
@@ -33,5 +31,3 @@ class Observer
     std::map<Observer *, Observer *> targets_;
 };
 }
-
-#endif /* OBSERVER_HPP */

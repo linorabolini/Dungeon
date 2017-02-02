@@ -6,11 +6,10 @@
 void PlayerTurnManager::doTurn(Unit* unit, Board* board)
 {
     auto tile = board->getUnitTile(unit);
-    TilesByDirection surroundingTiles = tile->surroundingTiles;
-    // player can only do actions over the surrounding tiles.
+    auto surroundingTiles = tile->surroundingTiles;
     auto possibleActions = getUnitPossibleActions(unit, board);
 
-    highlightTiles(possibleActions, surroundingTiles);
+    setTileHighlight(possibleActions, surroundingTiles, true);
 
     auto actionToDo = waitForPlayerAction(possibleActions);
 
@@ -19,7 +18,7 @@ void PlayerTurnManager::doTurn(Unit* unit, Board* board)
         return;
     }
 
-    highlightTiles(possibleActions, surroundingTiles, false);
+    setTileHighlight(possibleActions, surroundingTiles, false);
 
     (*actionToDo)();
 }
@@ -123,7 +122,7 @@ PlayerTurnManager::getUnitPossibleActions(Unit *unit, Board* board)
     return actions;
 }
 
-void PlayerTurnManager::highlightTiles(UnitActionsByDirection &possibleActions, TilesByDirection tiles, bool value)
+void PlayerTurnManager::setTileHighlight(UnitActionsByDirection &possibleActions, TilesByDirection tiles, bool value)
 {
     static SpriteNode effect(Locator::getResourceManager()->getTexture("selectedTileEffect"));
 

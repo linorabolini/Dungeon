@@ -1,6 +1,4 @@
-#ifndef TEXTNODE_HPP
-#define TEXTNODE_HPP
-
+#pragma once
 #import "Utils.hpp"
 #import "SceneNode.hpp"
 
@@ -25,4 +23,3 @@ public:
     Text text;
 };
 
-#endif /* TEXTNODE_HPP */

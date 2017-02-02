@@ -5,6 +5,23 @@
         "*h*hfunctional": "cpp",
         "functional": "cpp",
         "utility": "cpp",
-        "*h*htype_traits": "cpp"
+        "*h*htype_traits": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "*h*h*h*h*hdeque": "cpp",
+        "*h*hexception": "cpp",
+        "new": "cpp",
+        "*hcctype": "cpp",
+        "*hcstdio": "cpp",
+        "cstdlib": "cpp",
+        "*htuple": "cpp",
+        "type_traits": "cpp",
+        "typeinfo": "cpp",
+        "*h*hcwchar": "cpp",
+        "cwctype": "cpp",
+        "complex": "cpp",
+        "cstdint": "cpp",
+        "iostream": "cpp",
+        "*h*h*hdeque": "cpp"
     }
 }

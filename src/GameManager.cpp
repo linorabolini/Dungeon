@@ -76,12 +76,13 @@ void GameManager::turnLoop()
     {
         // new round
         LOG("NEW ROUND");
-        for (int i = 0; i < units_.size(); i++)
+        for (int i = 0; i < gameTurns_.size(); i++)
         {
             if (gameFinished_)
                 break;
 
-           auto unit = units_[i];
+           auto& gameTurn = gameTurns_[i];
+           auto unit = gameTurn.unit;
 
            if(!unit || unit->isDisposed() || unit->isDead()){
                continue;
@@ -89,7 +90,7 @@ void GameManager::turnLoop()
 
             // new turn
             LOG("NEW TURN");
-            std::thread turnThread(&GameManager::doUnitTurn, this, unit);
+            std::thread turnThread(&GameManager::doTurn, this, gameTurn);
             turnThread.join();
 
             // end turn
@@ -102,8 +103,11 @@ void GameManager::turnLoop()
         cout << SceneNode::nodeCount << endl;
 
         // Remove all children which request so
-        auto wreckfieldBegin = std::remove_if(units_.begin(), units_.end(), std::mem_fn(&SceneNode::isDisposed));
-        units_.erase(wreckfieldBegin, units_.end());
+        auto wreckfieldBegin = std::remove_if(gameTurns_.begin(), gameTurns_.end(),
+             [](TurnModel& gameTurn) {
+                return gameTurn.unit->isDisposed();
+            });
+        gameTurns_.erase(wreckfieldBegin, gameTurns_.end());
     }
     LOG("LEVEL FINISHED OR GAME OVER");
 }
@@ -118,11 +122,11 @@ void GameManager::initGame()
     return;
 }
 
-void GameManager::doUnitTurn(Unit *unit)
+void GameManager::doTurn(TurnModel gameTurn)
 {
     LOG("DOING UNIT TURN");
-    static auto playerTurnManager = new PlayerTurnManager();
-    playerTurnManager->doTurn(unit, board_);
+    auto turnManager = gameTurn.turnManager;
+    turnManager->doTurn(gameTurn.unit, board_);
     return;
 }
 
@@ -136,13 +140,12 @@ void GameManager::addPlayer()
 
     auto player = new Unit();
     player->setHP(20);
-    // player->setTurnManager(playerTurnManager);
     board_->setUnitTile(player, &playerTile);
 
     player->sprite.setTexture(rm->getTexture("dungeon3"));
     player->sprite.setTextureRect(Utils::getRectForTilemap(20, 7, 16, 16));
 
-    addUnit(player);
+    addTurn(player, new PlayerTurnManager());
 
     camera_->setTarget(player);
 
@@ -160,12 +163,19 @@ void GameManager::addPlayer()
     player->sprite.setTexture(rm->getTexture("dungeon3"));
     player->sprite.setTextureRect(Utils::getRectForTilemap(21, 7, 16, 16));
 
-    addUnit(player);
+    addTurn(player, turnManager);
 }
 
-void GameManager::addUnit(Unit* unit)
+
+void GameManager::addTurn(Unit* unit, TurnManager* turnManager)
 {
-    units_.push_back(unit);
+    auto tm = TurnModel(unit, turnManager);
+    addTurn(tm);
+}
+
+void GameManager::addTurn(TurnModel& gtm)
+{
+    gameTurns_.push_back(gtm);
 }
 
 void GameManager::loadBoard()
@@ -173,4 +183,19 @@ void GameManager::loadBoard()
     // Load map
     board_->loadFromFile(Locator::getDirHelper()->getMapPath() + "map.tmx");
     board_->connectTilesFromTileLayer("Board");
+}
+
+void GameManager::initEventListeners()
+{
+    on(GameEvent::FLOOR_CLEARED, [&](const dungeon::Event) {
+        getGameState().floorsCleared++;
+    });
+
+    on(GameEvent::ENEMY_KILLED, [&](const dungeon::Event) {
+        getGameState().enemiesKilled++;
+    });
+
+    on(GameEvent::CHEST_OPENED, [&](const dungeon::Event) {
+        getGameState().chestsOpened++;
+    });
 }

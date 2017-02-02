@@ -1,6 +1,4 @@
-#ifndef LAYER_HPP
-#define LAYER_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "Tile.hpp"
 #include "SceneNode.hpp"
@@ -19,4 +17,3 @@ class TileLayer : public SceneNode
     std::string name;
 };
 
-#endif /* LAYER_HPP */

@@ -8,6 +8,9 @@
     "args": [],
     "tasks": [
         {
+            "taskName": "clean"
+        },
+        {
             "taskName": "game"
         },
         {

@@ -1,13 +1,10 @@
-#ifndef UTILS_HPP
-#define UTILS_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <Locator.hpp>
 #include <thread>
-
 
 using namespace std;
 using namespace sf;
@@ -26,4 +23,3 @@ class Utils
     }
 };
 
-#endif /* UTILS_HPP */

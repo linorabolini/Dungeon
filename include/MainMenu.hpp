@@ -1,6 +1,4 @@
-#ifndef MAINMENU_HPP
-#define MAINMENU_HPP
-
+#pragma once
 #include "Screen.hpp"
 
 class MainMenu : public Screen
@@ -9,4 +7,3 @@ class MainMenu : public Screen
     virtual void render(sf::RenderWindow *win_);
 };
 
-#endif /* MAINMENU_HPP */

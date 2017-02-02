@@ -21,6 +21,7 @@ public:
         ADD_TEST(GameManagerSuite::gameState_creation);
         ADD_TEST(GameManagerSuite::gameManager_creation);
         ADD_TEST(GameManagerSuite::gameManager_gameState_modification);
+        ADD_TEST(GameManagerSuite::gameManager_event_listeners);
     }
 
     void gameState_creation()
@@ -60,6 +61,17 @@ public:
         gm.notify(dungeon::Event("FLOOR_CLEARED"));
 
         ASSERT_TRUE(gm.getGameState().floorsCleared == 2);
+    }
+
+    void gameManager_event_listeners()
+    {
+        GameManager gm;
+        gm.initEventListeners();
+        gm.notify(dungeon::Event(GameEvent::FLOOR_CLEARED));
+        gm.notify(dungeon::Event(GameEvent::CHEST_OPENED));
+        gm.notify(dungeon::Event(GameEvent::ENEMY_KILLED));
+
+        ASSERT_TRUE(gm.getGameState().floorsCleared == 1);
     }
 
 };

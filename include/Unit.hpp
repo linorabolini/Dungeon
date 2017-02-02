@@ -1,6 +1,4 @@
-#ifndef UNIT_HPP
-#define UNIT_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "SpriteNode.hpp"
 
@@ -36,5 +34,3 @@ private:
     int hp_ = 0;
 };
 
-
-#endif /* UNIT_HPP */

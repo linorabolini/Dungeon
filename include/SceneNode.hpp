@@ -1,6 +1,4 @@
-#ifndef SCENENODE_HPP
-#define SCENENODE_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -119,6 +117,3 @@ private:
     SceneNode* parent_ = nullptr;
     bool disposed_ = false;
 };
-
-
-#endif /* SCENENODE_HPP */

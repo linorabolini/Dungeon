@@ -1,6 +1,4 @@
-#ifndef MOVECAMERACOMMAND_HPP
-#define MOVECAMERACOMMAND_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "Command.hpp"
 #include "System.hpp"
@@ -19,4 +17,3 @@ private:
     float zoom_; 
 };
 
-#endif /* MOVECAMERACOMMAND_HPP */

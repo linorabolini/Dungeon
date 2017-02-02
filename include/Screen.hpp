@@ -1,6 +1,4 @@
-#ifndef SCREEN_HPP
-#define SCREEN_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "SceneNode.hpp"
 
@@ -11,4 +9,3 @@ class Screen : public SceneNode
     virtual void unload(){};
 };
 
-#endif /* SCREEN_HPP */

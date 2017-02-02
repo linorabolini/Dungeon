@@ -1,6 +1,4 @@
-#ifndef GAME_HPP
-#define GAME_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "ScreenManager.hpp"
 
@@ -17,5 +15,3 @@ class Game
     sf::RenderWindow win_;
     ScreenManager screenManager_;
 };
-
-#endif /* GAME_HPP */

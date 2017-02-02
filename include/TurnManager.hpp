@@ -1,6 +1,4 @@
-#ifndef TURNMANAGER_HPP
-#define TURNMANAGER_HPP
-
+#pragma once
 #include "Board.hpp"
 #include "Unit.hpp"
 
@@ -13,4 +11,3 @@ public:
     virtual void doTurn(Unit* unit, Board* board) {};
 };
 
-#endif /* TURNMANAGER_HPP */

@@ -1,6 +1,4 @@
-#ifndef TILEOBJECT_HPP
-#define TILEOBJECT_HPP
-
+#pragma once
 #include "XMLNode.hpp"
 
 class TileObject : public XMLNode
@@ -10,5 +8,3 @@ class TileObject : public XMLNode
     std::string type;
     sf::Rect<int> rect;
 };
-
-#endif /* TILEOBJECT_HPP */

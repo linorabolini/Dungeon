@@ -1,6 +1,4 @@
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "SceneNode.hpp"
 
@@ -19,4 +17,3 @@ private:
     SceneNode* target_ = NULL;
 };
 
-#endif /* CAMERA_HPP */

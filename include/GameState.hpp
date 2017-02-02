@@ -1,6 +1,4 @@
-#ifndef GAMESTATE_HPP
-#define GAMESTATE_HPP
-
+#pragma once
 struct GameState
 {
     int floorsCleared = 0;
@@ -8,4 +6,3 @@ struct GameState
     int chestsOpened = 0;
 };
 
-#endif /* GAMESTATE_HPP */

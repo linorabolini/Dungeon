@@ -1,6 +1,4 @@
-#ifndef TILETYPE_HPP
-#define TILETYPE_HPP
-
+#pragma once
 #include "Tileset.hpp"
 
 class Tiletype : public XMLNode
@@ -9,4 +7,3 @@ class Tiletype : public XMLNode
     Tileset* tileset;
 };
 
-#endif /* TILETYPE_HPP */

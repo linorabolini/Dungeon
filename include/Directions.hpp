@@ -1,6 +1,4 @@
-#ifndef DIRECTIONS_HPP
-#define DIRECTIONS_HPP
-
+#pragma once
 #include <vector>
 
 enum Direction {
@@ -19,4 +17,3 @@ static std::vector<Direction>
   Direction::RIGHT
 };
 
-#endif /* DIRECTIONS_HPP */

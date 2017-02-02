@@ -1,6 +1,4 @@
-#ifndef NODETWEEN_HPP
-#define NODETWEEN_HPP
-
+#pragma once
 #include <tween.h>
 #include "SceneNode.hpp"
 
@@ -14,5 +12,3 @@ public:
     static Tween position(SceneNode &node, vector<float>& from, const vector<float> &to);
 };
 
-
-#endif /* NODETWEEN_HPP */

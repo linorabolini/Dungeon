@@ -1,6 +1,4 @@
-#ifndef TILE_HPP
-#define TILE_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "Directions.hpp"
 #include "XMLNode.hpp"
@@ -21,4 +19,3 @@ public:
   bool isConnectedTo(Tile& other);
 };
 
-#endif /* TILE_HPP */

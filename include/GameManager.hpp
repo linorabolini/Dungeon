@@ -1,6 +1,4 @@
-#ifndef GameManager_HPP
-#define GameManager_HPP
-
+#pragma once
 #include "Utils.hpp"
 #include "GameMacros.hpp"
 #include "Unit.hpp"
@@ -9,52 +7,63 @@
 #include "Camera.hpp"
 #include "Board.hpp"
 #include "CommandQueue.hpp"
-#include <thread>
+#include "GameEvent.hpp"
 #include "Observer.hpp"
+#include <thread>
 
 #include "GameState.hpp"
 
 class Board;
+class TurnManager;
+
+struct TurnModel
+{
+  TurnModel(Unit *u, TurnManager *tm) : unit(u), turnManager(tm){};
+  TurnModel();
+
+  Unit *unit;
+  TurnManager *turnManager;
+};
 
 class GameManager : public SceneNode, public dungeon::Observer
 {
-  public:
-    virtual void updateCurrent();
-    virtual void render(sf::RenderWindow *window, const sf::Transform parentTransform) const;
-    
+public:
+  virtual void updateCurrent();
+  virtual void render(sf::RenderWindow *window, const sf::Transform parentTransform) const;
 
-    void load();
-    void unload();
+  void load();
+  void unload();
 
-    void addUnit(Unit *unit);
-    Camera *getCamera() { return camera_; };
-    Board *getBoard() { return board_; };
-    CommandQueue commandQueue;
+  void addTurn(Unit *unit, TurnManager *tm);
+  void addTurn(TurnModel &gtm);
 
-    bool isGameFinished() { return gameFinished_; }
+  Camera *getCamera() { return camera_; };
+  Board *getBoard() { return board_; };
 
-    GameState& getGameState() { return gameState_; }
-    void setGameState(GameState& gs) { gameState_ = gs; }
+  bool isGameFinished() { return gameFinished_; }
 
-  private:
-    void initGame();
-    void turnLoop();
-    void doUnitTurn(Unit *unit);
+  void setGameState(GameState &gs) { gameState_ = gs; }
+  GameState &getGameState() { return gameState_; }
 
-    Board *board_ = nullptr;
-    Camera *camera_ = nullptr;
-    std::thread *turnThread_ = nullptr;
-    bool gameFinished_ = false;
+  void initEventListeners();
 
-    SceneNode *uiLayer_;
-    SceneNode *gameLayer_;
+private:
+  void initGame();
+  void turnLoop();
+  void doTurn(TurnModel gtm);
 
-    std::vector<Unit *> units_;
+  Board *board_ = nullptr;
+  Camera *camera_ = nullptr;
+  std::thread *turnThread_ = nullptr;
+  bool gameFinished_ = false;
 
-    void addPlayer();
-    void loadBoard();
+  SceneNode *uiLayer_;
+  SceneNode *gameLayer_;
 
-    GameState gameState_;
+  std::vector<TurnModel> gameTurns_;
+
+  void addPlayer();
+  void loadBoard();
+
+  GameState gameState_;
 };
-
-#endif /* GameManager_HPP */

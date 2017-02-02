@@ -1,6 +1,4 @@
-#ifndef BOARD_HPP
-#define BOARD_HPP
-
+#pragma once
 #include "tinyxml.h"
 #include "Utils.hpp"
 #include "SceneNode.hpp"
@@ -57,5 +55,3 @@ private:
 
     BidirectionalMap<Unit*, Tile*> bidirectionalUnitsToTiles_;
 };
-
-#endif /* BOARD_HPP */

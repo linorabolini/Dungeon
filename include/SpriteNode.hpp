@@ -1,6 +1,4 @@
-#ifndef SPRITENODE_HPP
-#define SPRITENODE_HPP
-
+#pragma once
 #include "SceneNode.hpp"
 
 class SpriteNode : public SceneNode
@@ -14,5 +12,3 @@ public:
     }
 };
 
-
-#endif /* SPRITENODE_HPP */

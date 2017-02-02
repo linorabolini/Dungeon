@@ -1,6 +1,4 @@
-#ifndef TILESET_HPP
-#define TILESET_HPP
-
+#pragma once
 #include "XMLNode.hpp"
 
 class Tileset : public XMLNode
@@ -10,5 +8,3 @@ class Tileset : public XMLNode
     int firstTileID;
     std::vector<sf::Rect<int>> subRects;
 };
-
-#endif /* TILESET_HPP */

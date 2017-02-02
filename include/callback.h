@@ -1,6 +1,4 @@
-#ifndef CALLBACK_H
-#define CALLBACK_H
-
+#pragma once
 #include <utility>
 #include <stdio.h>
 #include <vector>
@@ -104,4 +102,3 @@ public:
 
 }
 
-#endif // CALLBACK_H

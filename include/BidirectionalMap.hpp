@@ -1,6 +1,4 @@
-#ifndef BIDIRECTIONALMAP_HPP
-#define BIDIRECTIONALMAP_HPP
-
+#pragma once
 #include <map>
 
 using namespace std;
@@ -29,4 +27,3 @@ private:
     map<B,A> mapBtoA_;
 };
 
-#endif /* BIDIRECTIONALMAP_HPP */

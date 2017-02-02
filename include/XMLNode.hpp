@@ -1,6 +1,4 @@
-#ifndef XMLNODE_HPP
-#define XMLNODE_HPP
-
+#pragma once
 #include <string>
 #include <vector>
 #include <map>
@@ -15,4 +13,3 @@ class XMLNode {
     std::map<std::string, std::string> properties; //All properties of the TileObject. Values are stored as strings and mapped by strings(names provided in editor).
 };
 
-#endif /* XMLNODE_HPP */

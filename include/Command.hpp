@@ -1,9 +1,5 @@
-#ifndef COMMAND_HPP
-#define COMMAND_HPP
-
+#pragma once
 struct Command
 {
     virtual void execute(){};
 };
-
-#endif /* COMMAND_HPP */

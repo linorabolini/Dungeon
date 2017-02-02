@@ -1,6 +1,4 @@
-#ifndef PLAYERTURNMANAGER_HPP
-#define PLAYERTURNMANAGER_HPP
-
+#pragma once
 #include "TurnManager.hpp"
 #include "Directions.hpp"
 #include "Tile.hpp"
@@ -26,14 +24,13 @@ public:
   virtual void doTurn(Unit* unit, Board* board);
 
 private:
-  void highlightTiles(UnitActionsByDirection &possibleActions, TilesByDirection, bool value = true);
+  void setTileHighlight(UnitActionsByDirection &possibleActions, TilesByDirection, bool value = true);
   UnitAction* waitForPlayerAction(UnitActionsByDirection &);
   UnitActionsByDirection getUnitPossibleActions(Unit *, Board* board);
   map<Direction, Keyboard::Key> dirToKeyboard_ = {
       {Direction::UP, Keyboard::Up},
       {Direction::DOWN, Keyboard::Down},
       {Direction::LEFT, Keyboard::Left},
-      {Direction::RIGHT, Keyboard::Right}};
+      {Direction::RIGHT, Keyboard::Right}
+  };
 };
-
-#endif /* PLAYERTURNMANAGER_HPP */

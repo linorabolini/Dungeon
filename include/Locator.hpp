@@ -1,6 +1,4 @@
-#ifndef LOCATOR_HPP
-#define LOCATOR_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <queue>
@@ -50,4 +48,4 @@ class Locator
     static GameManager *gameManager_;
     static ResourceManager *resourceManager_;
 };
-#endif /* LOCATOR_HPP */
+

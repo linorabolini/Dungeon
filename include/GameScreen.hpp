@@ -1,6 +1,4 @@
-#ifndef GAMESCREEN_HPP
-#define GAMESCREEN_HPP
-
+#pragma once
 #include "Screen.hpp"
 #include "GameManager.hpp"
 
@@ -15,4 +13,3 @@ private:
     GameManager* gameManager_;
 };
 
-#endif /* GAMESCREEN_HPP */
